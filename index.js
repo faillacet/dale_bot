@@ -9,7 +9,7 @@ bot.login(TOKEN);
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
-    bot.user.setUsername("Dodger Dale");
+    bot.user.setUsername("dodger dale");
 });
 
 // Listen for "message" Event
