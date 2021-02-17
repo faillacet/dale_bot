@@ -64,20 +64,24 @@ bot.on('message', msg => {
     }
     
     // Play Despacito event
-    if (msg.content === 'alexa play despacito') {
-        // Make bot join channel
-        // bot.channels.cache.get("ChannelID");
-        // if(msg.member.voice.channel) {
-        //     const connection = await msg.member.voice.channel.join();
-        // }
-        msg.channel.send("!play lana del rey sexy moments 2018");
-    }
+    // if (msg.content === 'alexa play despacito') {
+    //     // Make bot join channel
+    //     // bot.channels.cache.get("ChannelID");
+    //     // if(msg.member.voice.channel) {
+    //     //     const connection = await msg.member.voice.channel.join();
+    //     // }
+    //     msg.channel.send("!play lana del rey sexy moments 2018");
+    // }
 });
 
+// Play despacito
 bot.on('message', async message => {
     // Join same channel as author
-    if(message.member.voice.channel) {
-        const connection = await message.member.voice.channel.join();
+    if(message.content === "alexa play despacito") {
+        if(message.member.voice.channel) {
+            const connection = await message.member.voice.channel.join();
+            message.channel.send("!play despacito remix");
+        }
     }
 });
 
