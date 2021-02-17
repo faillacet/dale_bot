@@ -22,7 +22,6 @@ bot.on('message', msg => {
 
     // Play Despacito event
     if (msg.content === 'alexa play despacito') {
-        msg.reply('!play lana del ray sexy moments 2018');
         msg.channel.send("!play lana del ray sexy moments 2018");
     }
 });
