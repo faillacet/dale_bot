@@ -21,8 +21,24 @@ bot.on('message', msg => {
     }
      
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?") {
-        msg.channel.send("Srry I have to go make a sandwich");
+        var x = Math.random() * 5;
+        if (x === 0) {
+            msg.channel.send("Srry I have to go make a sandwich");
+        }
+        else if (x === 1) {
+            msg.channel.send("Srry I have to go take a shower");
+        }
+        else if (x === 2) {
+            msg.channel.send("Srry I have to go walk my cat");   
+        }
+        else if (x === 3) {
+            msg.channel.send("Srry I have to go tan my head");    
+        }
+        else if (x === 4) {
+            msg.channel.send("Srry I have to go ask my dad for more bandwith");    
+        }
     }
+    
     // Play Despacito event
     if (msg.content === 'alexa play despacito') {
         msg.channel.send("!play lana del rey sexy moments 2018");
