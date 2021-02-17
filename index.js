@@ -15,7 +15,7 @@ bot.on('ready', () => {
 // msg.reply: tags the initial user who sent the message
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
-    if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE'}) {
+    if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {
         //msg.reply('Srry I no game, I dodge');
         msg.channel.send("Henlo friends");
     }
