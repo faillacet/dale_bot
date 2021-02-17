@@ -67,8 +67,9 @@ bot.on('message', msg => {
     if (msg.content === 'alexa play despacito') {
         // Make bot join channel
         // bot.channels.cache.get("ChannelID");
-        let channelToJoin = msg.lastMessageChannelID;
-        channelToJoin.join();
+        if(msg.member.voice.channel) {
+            const connection = await msg.member.voice.channel.join();
+        }
         msg.channel.send("!play lana del rey sexy moments 2018");
     }
 });
