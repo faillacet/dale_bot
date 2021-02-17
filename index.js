@@ -35,7 +35,7 @@ bot.on('message', msg => {
             msg.channel.send("Srry I have to go tan my head");    
         }
         else if (x >= 4 && x <=5) {
-            msg.channel.send("Srry I have to go ask my dad for more bandwith");    
+            msg.channel.send("Srry I have to go ask my dad for more bandwidth");    
         }
     }
     
