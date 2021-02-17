@@ -40,20 +40,21 @@ bot.on('message', msg => {
 
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
-        var x = Math.random() * 5;
-        if (x >= 0 && x < 1) {
+        var x = Math.floor(Math.random() * 5) + 1; // returns value from 1 to 5 
+        let msgStr = "msg.channel.send";
+        if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
         }
-        else if (x >= 1 && x < 2) {
+        else if (x === 2) {
             msg.channel.send("Srry I have to go take a shower");
         }
-        else if (x >= 2 && x < 3) {
+        else if (x === 3) {
             msg.channel.send("Srry I have to go walk my cat");   
         }
-        else if (x >= 3 && x < 4) {
+        else if (x === 4) {
             msg.channel.send("Srry I have to go tan my head");    
         }
-        else if (x >= 4 && x <=5) {
+        else if (x === 5) {
             msg.channel.send("Srry I have to go ask my dad for more bandwidth");    
         }
     }
