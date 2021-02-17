@@ -1,3 +1,4 @@
+const dict = require('./dictionary.js');
 require('dotenv').config();
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -5,6 +6,9 @@ const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
+
+// Test Purposes, pulling infornmation fronm dictionary.js
+console.log(dict[0]);
 
 // Listen for "ready" Event
 bot.on('ready', () => {
@@ -41,7 +45,7 @@ bot.on('message', msg => {
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
         var x = Math.floor(Math.random() * 5) + 1; // returns value from 1 to 5 
-        let msgStr = "msg.channel.send";
+        
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
         }
