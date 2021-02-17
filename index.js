@@ -20,7 +20,8 @@ bot.on('message', msg => {
         msg.channel.send("Henlo friends");
     }
      
-    if(msg.content === "dale do you want to game?" || msg.content === "dale games?") {
+    // Dale games request responses
+    if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
         var x = Math.random() * 5;
         if (x >= 0 && x < 1) {
             msg.channel.send("Srry I have to go make a sandwich");
