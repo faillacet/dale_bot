@@ -2,7 +2,7 @@
 Henlo friends
 except dale... #dalebot
 
-# Dale Responses:
+# Dale Responses
 ## Name Responses:
 'dale'
 'Dale'
