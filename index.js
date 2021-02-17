@@ -9,6 +9,7 @@ bot.login(TOKEN);
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
+    bot.user.setUsername("Dodger Dale");
 });
 
 // Listen for "message" Event
@@ -68,5 +69,5 @@ bot.login(process.env.TOKEN); // TOKEN is the CLient Secret
 
 /* TODO:
  - create a randomized event for dale-bot to post in chat "anyone want to go to wendy's?"
-
+ - create spontaneous messages.
 */
