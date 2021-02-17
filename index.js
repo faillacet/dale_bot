@@ -23,19 +23,19 @@ bot.on('message', msg => {
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?") {
         var x = Math.random() * 5;
         if (x >= 0 && x < 1) {
-            console.log("Srry I have to go make a sandwich");
+            msg.channel.send("Srry I have to go make a sandwich");
         }
         else if (x >= 1 && x < 2) {
-            console.log("Srry I have to go take a shower");
+            msg.channel.send("Srry I have to go take a shower");
         }
         else if (x >= 2 && x < 3) {
-            console.log("Srry I have to go walk my cat");   
+            msg.channel.send("Srry I have to go walk my cat");   
         }
         else if (x >= 3 && x < 4) {
-            console.log("Srry I have to go tan my head");    
+            msg.channel.send("Srry I have to go tan my head");    
         }
         else if (x >= 4 && x <=5) {
-            console.log("Srry I have to go ask my dad for more bandwith");    
+            msg.channel.send("Srry I have to go ask my dad for more bandwith");    
         }
     }
     
