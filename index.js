@@ -15,11 +15,26 @@ bot.on('ready', () => {
 // msg.reply: tags the initial user who sent the message
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
+    // Dale mentioned
     if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {
         //msg.reply('Srry I no game, I dodge');
         msg.channel.send("Henlo friends");
     }
      
+    // On Event Dale Sends A Message
+    if (msg.author.id === "218225932886867968") {
+        var x = Math.random() * 1000;
+        if (x < 1) {
+            msg.delete(); //no delay
+        }
+    }
+
+    // On Event Trenton Sends A Message
+    if (msg.author.id === "173944478770397186") {
+        //msg.delete();
+        //msg.channel.send("I Am Dodge");
+    }
+
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
         var x = Math.random() * 5;
