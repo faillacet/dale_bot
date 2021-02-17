@@ -74,6 +74,13 @@ bot.on('message', msg => {
     }
 });
 
+bot.on('message', async message => {
+    // Join same channel as author
+    if(message.member.voice.channel) {
+        const connection = await message.member.voice.channel.join();
+    }
+});
+
 // Heroku Server Connection 
 bot.login(process.env.TOKEN); // TOKEN is the CLient Secret
 
