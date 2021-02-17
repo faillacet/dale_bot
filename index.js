@@ -63,3 +63,10 @@ bot.on('message', msg => {
     }
 });
 
+// Heroku Server Connection 
+Discord.Client(process.env.BOT_TOKEN); // BOT_TOKEN is the CLient Secret
+
+/* TODO:
+ - create a randomized event for dale-bot to post in chat "anyone want to go to wendy's?"
+
+*/
