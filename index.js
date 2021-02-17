@@ -24,15 +24,17 @@ bot.on('message', msg => {
     // On Event Dale Sends A Message
     if (msg.author.id === "218225932886867968") {
         var x = Math.random() * 1000;
-        if (x < 1) {
+        if (x < 5) {
             msg.delete(); //no delay
         }
+        else if (msg.content.includes("game")) {
+            msg.channel.send("SIKE I DONT PLAY GAMES!!! --- ps sry dale this is an experimental feature");
+        }
     }
-
+ 
     // On Event Trenton Sends A Message
-    if (msg.author.id === "173944478770397186") {
-        //msg.delete();
-        //msg.channel.send("I Am Dodge");
+    if (msg.author.id === "173944478770397186" && msg.content.includes("dale")) {
+        
     }
 
     // Dale games request responses
