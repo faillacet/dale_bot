@@ -62,3 +62,6 @@ bot.on('message', msg => {
         msg.channel.send("!play lana del rey sexy moments 2018");
     }
 });
+
+// Heroku Server Connection
+client.login(process.env.BOT_TOKEN); // BOT_TOKEN is the Client Secret
