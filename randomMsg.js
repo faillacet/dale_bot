@@ -12,4 +12,6 @@ module.exports = randomMessages = [
     "i h8 survival games, but I'll spend 20 bucks on boost mobile look",
     "my tooth hurts",
     "Invest in BlackBerry stocks",
+    "help, im addicted to wow",
+    
 ];

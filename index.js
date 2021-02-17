@@ -1,4 +1,4 @@
-const dict = require('./dictionary.js');
+const randomMsg = require('./randomMsg.js');
 require('dotenv').config();
 const Discord = require('discord.js');
 const bot = new Discord.Client();
@@ -8,7 +8,7 @@ const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
 // Test Purposes, pulling infornmation fronm dictionary.js
-console.log(dict[0]);
+console.log(randomMsg[0]);
 
 // Listen for "ready" Event
 bot.on('ready', () => {
@@ -65,6 +65,9 @@ bot.on('message', msg => {
     
     // Play Despacito event
     if (msg.content === 'alexa play despacito') {
+        // Make bot join channel
+        // bot.channels.cache.get("ChannelID");
+        channel.join(msg.lastMessageChannelID);
         msg.channel.send("!play lana del rey sexy moments 2018");
     }
 });
