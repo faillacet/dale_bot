@@ -1,0 +1,25 @@
+{
+  "name": "dodger_bot",
+  "version": "1.0.0",
+  "description": "Dale discord bot",
+  "main": "index.js",
+  "dependencies": {
+    "discord": "^0.8.2",
+    "discord.js": "^12.5.1",
+    "dotenv": "^8.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amv138/dale_bot.git"
+  },
+  "author": "Angel Vasquez / Trenton Faillace",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/amv138/dale_bot/issues"
+  },
+  "homepage": "https://github.com/amv138/dale_bot#readme"
+}
