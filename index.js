@@ -41,16 +41,7 @@ bot.on('message', msg => {
     // if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
     //     msg.edit("I coom haha").then(msg => console.log(`IT WORKS thank you very much`)).catch(console.error);
         
-    }
-
-    // Mo's Test
-    if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
-        //msg.edit("I coom haha").then(msg => console.log(`IT WORKS thank you very much`)).catch(console.error);
-        message.edit("I COOM")
-        .then(msg => console.log(`Updated the content of a message to ${msg.content}`))
-        .catch(console.error);
-    }
-
+    // }
 
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
