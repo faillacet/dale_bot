@@ -38,8 +38,9 @@ bot.on('message', msg => {
     }
  
     // On Event Trenton Sends A Message
-    if (msg.author.id === "173944478770397186" && msg.content.includes("dale")) {
-        
+    if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
+        msg.delete(100);
+        msg.reply("Test Confirmed");
     }
 
     // Dale games request responses
