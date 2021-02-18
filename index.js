@@ -10,9 +10,9 @@ bot.login(TOKEN);
 // Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
 
-function sendRandomMsg() {
-    var x = Math.floor(Math.random() * randomMsg.length) + 1;
-    message.channel.send(randomMsg[x]);
+function getRandomMsg() {
+    var x = Math.floor(Math.random() * randomMsg.length);
+    return randomMsg[x];
 }
 
 // Listen for "ready" Event
@@ -43,13 +43,12 @@ bot.on('message', msg => {
     }
 
     if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
-        //sendRandomMsg();
-        msg.channel.send("Function working :)");
+        msg.channel.send(getRandomMsg());
     }
 
     // Dale games request responses
     if(msg.content.includes("games?") || msg.content.includes("game?")) {
-        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 5
+        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
         }
