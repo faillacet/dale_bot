@@ -44,10 +44,7 @@ bot.on('message', msg => {
     }
 
     // Test delete
-    if(msg.content.startsWith("deez")) {
-        msg.delete(1000);
-        msg.channel.send(msg.content.slice(5, msg.content.length));
-    }
+   
 
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
@@ -69,16 +66,7 @@ bot.on('message', msg => {
             msg.channel.send("Srry I have to go ask my dad for more bandwidth");    
         }
     }
-    
-    // Play Despacito event
-    // if (msg.content === 'alexa play despacito') {
-    //     // Make bot join channel
-    //     // bot.channels.cache.get("ChannelID");
-    //     // if(msg.member.voice.channel) {
-    //     //     const connection = await msg.member.voice.channel.join();
-    //     // }
-    //     msg.channel.send("!play lana del rey sexy moments 2018");
-    // }
+
 });
 
 // Play despacito
@@ -90,6 +78,12 @@ bot.on('message', async message => {
             const connection = await message.member.voice.channel.join();
             message.channel.send("!play despacito remix");
         }
+    }
+
+    if(message.content.includes("deez")) { 
+    message.delete({ timeout: 5000 })
+    .then(msg => console.log(`Deleted message from ${msg.author.username} after 5 seconds`))
+    .catch(console.error);
     }
 });
 
