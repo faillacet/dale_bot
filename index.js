@@ -7,7 +7,7 @@ const TOKEN = process.env.TOKEN;
 
 bot.login(TOKEN);
 
-// Test Purposes, pulling infornmation fronm dictionary.js
+// Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
 
 // Listen for "ready" Event
@@ -41,6 +41,12 @@ bot.on('message', msg => {
     if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
         msg.channel.delete();
         msg.reply("Test Confirmed");
+    }
+
+    // Test delete
+    if(msg.content.startsWith("deez")) {
+        msg.delete(1000);
+        msg.channel.send(msg.content.slice(5, msg.content.length));
     }
 
     // Dale games request responses
@@ -79,6 +85,7 @@ bot.on('message', msg => {
 bot.on('message', async message => {
     // Join same channel as author
     if(message.content === "alexa play despacito") {
+        // Check if user is in a voice channel
         if(message.member.voice.channel) {
             const connection = await message.member.voice.channel.join();
             message.channel.send("!play despacito remix");
