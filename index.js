@@ -10,10 +10,10 @@ bot.login(TOKEN);
 // Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
 
-function sendRandomMsg() {
-    var x = Math.floor(Math.random() * randomMsg.length) + 1;
-    message.channel.send(randomMsg[x]);
-}
+// function sendRandomMsg() {
+//     var x = Math.floor(Math.random() * randomMsg.length) + 1;
+//     message.channel.send(randomMsg[x]);
+// }
 
 // Listen for "ready" Event
 bot.on('ready', () => {
@@ -42,11 +42,12 @@ bot.on('message', msg => {
         }
     }
 
-    if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
-        sendRandomMsg();
-        message.channel.send("Test working :)");
-        msg.channel.send("Also working");
-    }
+    // Trenton Sends a Message
+    // if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
+    //     sendRandomMsg();
+    //     message.channel.send("Test working :)");
+    //     msg.channel.send("Also working");
+    // }
 
     // Dale games request responses
     if(msg.content.includes("games?") || msg.content.includes("game?")) {
