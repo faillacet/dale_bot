@@ -16,3 +16,8 @@ except dale... #dalebot
 ## Despacito Response (not fully functional)
 'alexa play despacito'
 
+## !daleMsg Command
+'cool dale msgs'
+
+## !trantMsg Command
+'cool trant msgs'
