@@ -44,6 +44,8 @@ bot.on('message', msg => {
 
     if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
         sendRandomMsg();
+        message.channel.send("Test working :)");
+        msg.channel.send("Also working");
     }
 
     // Dale games request responses
