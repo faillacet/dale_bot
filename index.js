@@ -25,29 +25,26 @@ bot.on('ready', () => {
 // msg.reply: tags the initial user who sent the message
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
-    // Dale mentioned
-    if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {
-        //msg.reply('Srry I no game, I dodge');
-        msg.channel.send("Henlo friends");
+
+    if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {  // Condition "Dale" Mentioned in chat
+        msg.channel.send("Henlo friends");                                              // Print text to channel
     }
 
-    // On Event Dale Sends A Message
-    if (msg.author.id === "218225932886867968") {
+    if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 5/1000 chance to delete msg
         var x = Math.random() * 1000;
         if (x < 5) {
-            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
-        }
-        else if (msg.content.includes("game")) {
-            msg.channel.send("SIKE I DONT PLAY GAMES!!! --- ps sry dale this is an experimental feature");
+            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);    // 5/1000 chance to delete his msg
         }
     }
 
-    if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
-        msg.channel.send(getRandomMsg());
+    if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
+        var x = Math.random() * 10;                                                     // Make condition better later
+        if (x < 1) {
+            msg.channel.send(getRandomMsg());
+        }
     }
 
-    // Dale games request responses
-    if(msg.content.includes("games?") || msg.content.includes("game?")) {
+    if(msg.content.includes("games?") || msg.content.includes("game?")) {               // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
         var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
@@ -71,7 +68,6 @@ bot.on('message', msg => {
 
 });
 
-// Play despacito
 bot.on('message', async message => {
     // Join same channel as author
     if(message.content === "alexa play despacito") {
