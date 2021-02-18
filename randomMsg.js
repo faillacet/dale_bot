@@ -13,5 +13,5 @@ module.exports = randomMessages = [
     "my tooth hurts",
     "Invest in BlackBerry stocks",
     "help, im addicted to wow",
-    
+    "anyone want to play eternal return ???",
 ];
