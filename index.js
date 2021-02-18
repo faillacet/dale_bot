@@ -44,9 +44,8 @@ bot.on('message', msg => {
     // }
 
     // Dale games request responses
-    if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
+    if(msg.content.includes("games?") || msg.content.includes("game?")) {
         var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 5 
-        
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
         }
