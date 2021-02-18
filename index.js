@@ -90,9 +90,9 @@ bot.on('message', async message => {
     .catch(console.error);
     }
 
-    if(message.content.includes("deez")) {
-        msg.edit("I COOM");
-        msg.react("👋");
+    if(message.content.includes("coom")) {
+        message.edit("I COOM");
+        message.react("👋");
     }
 });
 
