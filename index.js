@@ -26,10 +26,6 @@ bot.on('ready', () => {
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
 
-    if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {  // Condition "Dale" Mentioned in chat
-        msg.channel.send("Henlo friends");                                              // Print text to channel
-    }
-
     if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 5/1000 chance to delete msg
         var x = Math.random() * 1000;
         if (x < 5) {
@@ -37,14 +33,10 @@ bot.on('message', msg => {
         }
     }
 
-    if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
-        var x = Math.random() * 5;                                                     // Make condition better later
-        if (x < 1) {
-            msg.channel.send(getRandomMsg());
-        }
+    if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
+        msg.channel.send(getRandomMsg());
     }
-
-    if (msg.content.includes("games?") || msg.content.includes("game?")) {               // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
+    else if (msg.content.includes("games?") || msg.content.includes("game?")) {         // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
         var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
@@ -65,10 +57,16 @@ bot.on('message', msg => {
             msg.channel.send("https://tenor.com/view/mega-force-tomorrow-thumb-kiss-see-you-tomorrow-gif-11618001");
         }
     }
-
-    if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
-        msg.channel.send(getRandomMsg());
+    else if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {  // Condition "Dale" Mentioned in chat
+        msg.channel.send("Henlo friends");                                              // Print text to channel
     }
+    else if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
+        var x = Math.random() * 5;                                                     // Make condition better later
+        if (x < 1) {
+            msg.channel.send(getRandomMsg());
+        }
+    }
+
 });
 
 bot.on('message', async message => {
