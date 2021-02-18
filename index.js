@@ -10,6 +10,11 @@ bot.login(TOKEN);
 // Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
 
+function sendRandomMsg() {
+    var x = Math.floor(Math.random() * randomMsg.length) + 1;
+    message.channel.send(randomMsg[x]);
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -25,7 +30,7 @@ bot.on('message', msg => {
         //msg.reply('Srry I no game, I dodge');
         msg.channel.send("Henlo friends");
     }
-     
+
     // On Event Dale Sends A Message
     if (msg.author.id === "218225932886867968") {
         var x = Math.random() * 1000;
@@ -36,16 +41,16 @@ bot.on('message', msg => {
             msg.channel.send("SIKE I DONT PLAY GAMES!!! --- ps sry dale this is an experimental feature");
         }
     }
- 
-    // On Event Trenton Sends A Message
-    // if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
-    //     msg.edit("I coom haha").then(msg => console.log(`IT WORKS thank you very much`)).catch(console.error);
-        
-    // }
+
+    if (msg.author.id === "173944478770397186" && msg.content.includes("help")) {
+        sendRandomMsg();
+        message.channel.send("Test working :)");
+        msg.channel.send("Also working");
+    }
 
     // Dale games request responses
     if(msg.content.includes("games?") || msg.content.includes("game?")) {
-        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 5 
+        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 5
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
         }
@@ -53,13 +58,13 @@ bot.on('message', msg => {
             msg.channel.send("Srry I have to go take a shower");
         }
         else if (x === 3) {
-            msg.channel.send("Srry I have to go walk my cat");   
+            msg.channel.send("Srry I have to go walk my cat");
         }
         else if (x === 4) {
-            msg.channel.send("Srry I have to go tan my head");    
+            msg.channel.send("Srry I have to go tan my head");
         }
         else if (x === 5) {
-            msg.channel.send("Srry I have to go ask my dad for more bandwidth");    
+            msg.channel.send("Srry I have to go ask my dad for more bandwidth");
         }
         else if (x === 6) {
             msg.channel.send("https://tenor.com/view/mega-force-tomorrow-thumb-kiss-see-you-tomorrow-gif-11618001");
@@ -79,11 +84,12 @@ bot.on('message', async message => {
         }
     }
 
-    if(message.content.includes("deez")) { 
+    if(message.content.includes("deez")) {
     message.delete({ timeout: 5000 })
     .then(msg => console.log(`Deleted message from ${msg.author.username} after 5 seconds`))
     .catch(console.error);
     }
+<<<<<<< HEAD
 
     if(message.content.includes("deez")) {
         msg.edit("I COOM");
@@ -91,9 +97,11 @@ bot.on('message', async message => {
     }
 
     
+=======
+>>>>>>> 651cc1c2fbe8aabbbdc98e23fd2bc2924726caa9
 });
 
-// Heroku Server Connection 
+// Heroku Server Connection
 bot.login(process.env.TOKEN); // TOKEN is the CLient Secret
 
 /* TODO:
