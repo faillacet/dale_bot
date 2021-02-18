@@ -11,9 +11,14 @@ bot.login(TOKEN);
 // Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
 
-function getRandomMsg(msgArray) {
-    var x = Math.floor(Math.random() * msgArray.length);
-    return msgArray[x];
+function getRandomDaleMsg() {
+    var x = Math.floor(Math.random() * randomMsg.length);
+    return randomMsg[x];
+}
+
+function getRandomTrantMsg() {
+    var x = Math.floor(Math.random() * randomTrantMsg.length);
+    return randomTrantMsg[x];
 }
 
 // Listen for "ready" Event
@@ -35,10 +40,10 @@ bot.on('message', msg => {
     }
 
     if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
-        msg.channel.send(getRandomMsg(randomMsg));
+        msg.channel.send(getRandomDaleMsg());
     }
     else if (msg.content === "!trantMsg") {                                             // Command "!trantMsg" gives custom trant msg
-        msg.channel.send(getRandomMsg(randomTrantMsg));
+        msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content.includes("games?") || msg.content.includes("game?")) {         // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
         var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
