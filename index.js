@@ -30,7 +30,7 @@ bot.on('message', msg => {
     if (msg.author.id === "218225932886867968") {
         var x = Math.random() * 1000;
         if (x < 5) {
-            msg.delete(); //no delay
+            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
         }
         else if (msg.content.includes("game")) {
             msg.channel.send("SIKE I DONT PLAY GAMES!!! --- ps sry dale this is an experimental feature");
@@ -39,10 +39,7 @@ bot.on('message', msg => {
  
     // On Event Trenton Sends A Message
     if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
-        msg.delete({ timeout: 0 })
-        .then(msg => console.log(`Deleted message from ${msg.author.username} after 0 seconds`))
-        .catch(console.error);
-        msg.reply("Test Confirmed");
+        msg.delete({ timeout: 0 }).then(msg => console.log(`Deleted message from ${msg.author.username} after 0 seconds`)).catch(console.error);
     }
 
 
