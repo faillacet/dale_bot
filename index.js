@@ -45,12 +45,10 @@ bot.on('message', msg => {
         msg.reply("Test Confirmed");
     }
 
-    // Test delete
-   
 
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
-        var x = Math.floor(Math.random() * 5) + 1; // returns value from 1 to 5 
+        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 5 
         
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
@@ -66,6 +64,9 @@ bot.on('message', msg => {
         }
         else if (x === 5) {
             msg.channel.send("Srry I have to go ask my dad for more bandwidth");    
+        }
+        else if (x === 6) {
+            msg.channel.send("https://tenor.com/view/mega-force-tomorrow-thumb-kiss-see-you-tomorrow-gif-11618001");
         }
     }
 
