@@ -84,6 +84,10 @@ bot.on('message', async message => {
     .then(msg => console.log(`Deleted message from ${msg.author.username} after 5 seconds`))
     .catch(console.error);
     }
+
+    const msg = await message.channel.send("Beep");
+    msg.edit("Boop");
+    msg.react("👋");
 });
 
 // Heroku Server Connection 
