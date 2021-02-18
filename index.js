@@ -44,9 +44,7 @@ bot.on('message', msg => {
     }
 
     // Test delete
-    if(msg.content.startsWith("deez")) {
-            msg.then(msg => console.log(`Deleted message from ${msg.author.username} after 5 seconds`))
-            .catch(console.error);
+   
 
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
