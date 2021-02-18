@@ -91,8 +91,8 @@ bot.on('message', async message => {
     }
 
     if(message.content.includes("coom")) {
-        msg.edit("I COOM");
-        msg.react("👋");
+        message.edit("I COOM");
+        message.react("👋");
     }
 });
 
