@@ -38,7 +38,7 @@ bot.on('message', msg => {
     }
 
     if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
-        var x = Math.random() * 10;                                                     // Make condition better later
+        var x = Math.random() * 5;                                                     // Make condition better later
         if (x < 1) {
             msg.channel.send(getRandomMsg());
         }
