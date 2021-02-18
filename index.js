@@ -10,13 +10,14 @@ bot.login(TOKEN);
 
 // Test Purposes, pulling infornmation from dictionary.js
 console.log(randomMsg[0]);
+console.log(randomTrantMsg[0]);
 
-function getRandomDaleMsg() {
+function getRandomDaleMsg() {                                        // gets random Dale Msg
     var x = Math.floor(Math.random() * randomMsg.length);
     return randomMsg[x];
 }
 
-function getRandomTrantMsg() {
+function getRandomTrantMsg() {                                       // gets random Trant Msg
     var x = Math.floor(Math.random() * randomTrantMsg.length);
     return randomTrantMsg[x];
 }
@@ -72,7 +73,7 @@ bot.on('message', msg => {
     else if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
         var x = Math.random() * 5;                                                     // Make condition better later
         if (x < 1) {
-            msg.channel.send(getRandomMsg());
+            msg.channel.send(getRandomDaleMsg());
         }
     }
 
