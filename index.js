@@ -44,7 +44,7 @@ bot.on('message', msg => {
         }
     }
 
-    if(msg.content.includes("games?") || msg.content.includes("game?")) {               // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
+    if (msg.content.includes("games?") || msg.content.includes("game?")) {               // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
         var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
         if (x === 1) {
             msg.channel.send("Srry I have to go make a sandwich");
@@ -66,6 +66,9 @@ bot.on('message', msg => {
         }
     }
 
+    if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
+        msg.channel.send(getRandomMsg());
+    }
 });
 
 bot.on('message', async message => {
