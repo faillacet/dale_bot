@@ -85,9 +85,7 @@ bot.on('message', async message => {
     .catch(console.error);
     }
 
-    const msg = await message.channel.send("Beep");
-    msg.edit("Boop");
-    msg.react("👋");
+    
 });
 
 // Heroku Server Connection 
