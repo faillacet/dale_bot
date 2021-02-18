@@ -39,7 +39,7 @@ bot.on('message', msg => {
  
     // On Event Trenton Sends A Message
     if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
-        message.edit('I coom haha').then(msg => console.log(`lol`)).catch(console.error);
+        msg.edit("I coom haha").then(msg => console.log(`lol`)).catch(console.error);
     }
 
 
