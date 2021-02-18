@@ -43,6 +43,12 @@ bot.on('message', msg => {
         msg.reply("Test Confirmed");
     }
 
+    // Test delete
+    if(msg.content.startsWith("deez")) {
+        msg.delete(1000);
+        msg.channel.send(msg.content.slice(5, msg.content.length));
+    }
+
     // Dale games request responses
     if(msg.content === "dale do you want to game?" || msg.content === "dale games?" || msg.content.includes("games?")) {
         var x = Math.floor(Math.random() * 5) + 1; // returns value from 1 to 5 
