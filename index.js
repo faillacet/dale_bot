@@ -39,7 +39,7 @@ bot.on('message', msg => {
  
     // On Event Trenton Sends A Message
     if (msg.author.id === "173944478770397186" && msg.content.includes("tacoman")) {
-        msg.delete({ timeout: 0 }).then(msg => console.log(`Deleted message from ${msg.author.username} after 0 seconds`)).catch(console.error);
+        message.edit('I coom haha').then(msg => console.log(`lol`)).catch(console.error);
     }
 
 
