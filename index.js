@@ -70,7 +70,7 @@ bot.on('message', msg => {
     else if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {  // Condition "Dale" Mentioned in chat
         msg.channel.send("Henlo friends");                                              // Print text to channel
     }
-    else if (msg.content.includes("a") || msg.content.includes("i")) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
+    else if ((msg.author.id != "811340483720249375") && (msg.content.includes("a") || msg.content.includes("i"))) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
         var x = Math.random() * 5;                                                     // Make condition better later
         if (x < 1) {
             msg.channel.send(getRandomDaleMsg());
