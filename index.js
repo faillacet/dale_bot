@@ -40,43 +40,17 @@ bot.on('message', msg => {
         }
     }
 
+    if (msg.author.id == "299319601269964801" && msg.content.includes("http")) {
+        //delete msg
+        msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
+    }
+
     if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
         msg.channel.send(getRandomDaleMsg());
     }
     else if (msg.content === "!trantMsg") {                                             // Command "!trantMsg" gives custom trant msg
         msg.channel.send(getRandomTrantMsg());
     }
-    else if (msg.content.includes("games?") || msg.content.includes("game?")) {         // Condition msg includes "games?" ---  Return 1 of 6 automated msgs
-        var x = Math.floor(Math.random() * 6) + 1; // returns value from 1 to 6
-        if (x === 1) {
-            msg.channel.send("Srry I have to go make a sandwich");
-        }
-        else if (x === 2) {
-            msg.channel.send("Srry I have to go take a shower");
-        }
-        else if (x === 3) {
-            msg.channel.send("Srry I have to go walk my cat");
-        }
-        else if (x === 4) {
-            msg.channel.send("Srry I have to go tan my head");
-        }
-        else if (x === 5) {
-            msg.channel.send("Srry I have to go ask my dad for more bandwidth");
-        }
-        else if (x === 6) {
-            msg.channel.send("https://tenor.com/view/mega-force-tomorrow-thumb-kiss-see-you-tomorrow-gif-11618001");
-        }
-    }
-    else if (msg.content === 'dale' || msg.content === 'Dale'  || msg.content === 'DALE') {  // Condition "Dale" Mentioned in chat
-        msg.channel.send("Henlo friends");                                              // Print text to channel
-    }
-    else if ((msg.author.id != "811340483720249375") && (msg.content.includes("a") || msg.content.includes("i"))) {                       // Condition Any Msg has "a" or "i" in it --- uses get random msg function
-        var x = Math.random() * 5;                                                     // Make condition better later
-        if (x < 1) {
-            msg.channel.send(getRandomDaleMsg());
-        }
-    }
-
 });
 
 bot.on('message', async message => {
@@ -87,17 +61,6 @@ bot.on('message', async message => {
             const connection = await message.member.voice.channel.join();
             message.channel.send("!play despacito remix");
         }
-    }
-
-    if(message.content.includes("deez")) {
-    message.delete({ timeout: 5000 })
-    .then(msg => console.log(`Deleted message from ${msg.author.username} after 5 seconds`))
-    .catch(console.error);
-    }
-
-    if(message.content.includes("coom")) {
-        message.edit("I COOM");
-        message.react("👋");
     }
 });
 
