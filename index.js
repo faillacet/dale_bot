@@ -40,7 +40,7 @@ bot.on('message', msg => {
         }
     }
 
-    if (msg.author.id == "299319601269964801" && (msg.content.includes("http") || msg.attachments != null)) {                                //deletes teris msg cuz fuk teri
+    if (msg.author.id === "299319601269964801" && (msg.content.includes("http") || msg.attachments != null)) {                                //deletes teris msg cuz fuk teri
         //delete msg
         msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
     }
