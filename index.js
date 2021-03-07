@@ -40,9 +40,14 @@ bot.on('message', msg => {
         }
     }
 
-    if (msg.author.id === "299319601269964801" && (msg.content.includes("http") || msg.attachments != null)) {                                //deletes teris msg cuz fuk teri
+    if (msg.author.id === "299319601269964801" && msg.content.includes("http")) {                                //deletes teris msg cuz fuk teri
         //delete msg
         msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
+    }
+    else if (msg.author.id === "299319601269964801" && msg.attachments.size > 0) {
+        let findImg = msg.attachments.find(attachment => attachment.filename.endsWith('png') || attachment.filename.endsWith('jpg') || attachment.filename.endsWith('gif'));
+        if (findImg != null)
+            msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
     }
 
     if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
