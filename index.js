@@ -13,8 +13,8 @@ console.log(randomDaleMsg[0]);
 console.log(randomTrantMsg[0]);
 
 function getRandomDaleMsg() {                                        // gets random Dale Msg
-    var x = Math.floor(Math.random() * randomDaleMsg.length);
-    return randomDaleMsg[x];
+    var x = Math.floor(Math.random() * randomDaleMsg.daleMsgArr.length);
+    return randomDaleMsg.daleMsgArr[x];
 }
 
 function getRandomTrantMsg() {                                       // gets random Trant Msg
