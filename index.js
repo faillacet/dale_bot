@@ -1,4 +1,4 @@
-var randomMsg = require('./randomMsg.js');
+var randomDaleMsg = require('./randomMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 require('dotenv').config();
 const Discord = require('discord.js');
@@ -9,12 +9,12 @@ const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
 // Test Purposes, pulling infornmation from dictionary.js
-console.log(randomMsg[0]);
+console.log(randomDaleMsg[0]);
 console.log(randomTrantMsg[0]);
 
 function getRandomDaleMsg() {                                        // gets random Dale Msg
-    var x = Math.floor(Math.random() * randomMsg.length);
-    return randomMsg[x];
+    var x = Math.floor(Math.random() * randomDaleMsg.length);
+    return randomDaleMsg[x];
 }
 
 function getRandomTrantMsg() {                                       // gets random Trant Msg
@@ -57,7 +57,7 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
-        randomMsg.push(msg.content.slice(11))
+        randomDaleMsg.appendArr(msg.content.slice(11))
         msg.channel.send("Sucessfully added Dale Msg <3")
     }
 });
