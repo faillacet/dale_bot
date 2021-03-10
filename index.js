@@ -33,10 +33,10 @@ bot.on('ready', () => {
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
 
-    if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 5/1000 chance to delete msg
-        var x = Math.random() * 100000;
+    if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 1/1000 chance to delete msg
+        var x = Math.random() * 1000;
         if (x < 1) {
-            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);    // 5/1000 chance to delete his msg
+            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
         }
     }
 
@@ -57,8 +57,13 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
-        randomDaleMsg.appendArr(msg.content.slice(11))
-        msg.channel.send("Sucessfully added Dale Msg <3")
+        if (msg.content.slice(0,10) === "!addDaleMsg") {
+            randomDaleMsg.appendArr(msg.content.slice(11))
+            msg.channel.send("Sucessfully added Dale Msg <3")
+        }
+        else {
+            msg.channel.send("Command not entered correctly, plz try again :)");
+        }        
     }
 });
 
