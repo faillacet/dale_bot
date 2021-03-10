@@ -56,6 +56,9 @@ bot.on('message', msg => {
     else if (msg.content === "!trantMsg") {                                             // Command "!trantMsg" gives custom trant msg
         msg.channel.send(getRandomTrantMsg());
     }
+    else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
+        randomMsg.push(msg.content.slice(11))
+    }
 });
 
 bot.on('message', async message => {
