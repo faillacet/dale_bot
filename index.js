@@ -1,4 +1,4 @@
-const randomMsg = require('./randomMsg.js');
+var randomMsg = require('./randomMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 require('dotenv').config();
 const Discord = require('discord.js');
@@ -57,7 +57,7 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
-        randomMessages.push(msg.content.slice(11))
+        randomMsg.push(msg.content.slice(11))
         msg.channel.send("Sucessfully added Dale Msg <3")
     }
 });
