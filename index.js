@@ -57,7 +57,8 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
-        randomMsg.push(msg.content.slice(11))
+        randomMessages.push(msg.content.slice(11))
+        msg.channel.send("Sucessfully added Dale Msg <3")
     }
 });
 
