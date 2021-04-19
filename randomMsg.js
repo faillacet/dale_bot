@@ -10,11 +10,9 @@ module.exports.daleMsgArr = [
     "League of Legends is the best game of all time",
     "anyone want to go to Wendy's",
     "i h8 survival games, but I'll spend 20 bucks on boost mobile games",
-    "my tooth hurts",
-    "Invest in BlackBerry stocks",
-    "help, im addicted to wow",
     "anyone want to play eternal return ???",
     "Ketchup is spicy",
+    "Cya I gotta go dodge :)",
 ];
 
 module.exports.appendArr = function(val){module.exports.daleMsgArr.push(val);};
