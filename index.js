@@ -34,7 +34,7 @@ bot.on('ready', () => {
 bot.on('message', msg => {
 
     if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 1/100 chance to delete msg
-        var x = Math.random() * 200;
+        var x = Math.random() * 500;
         if (x < 2) {
             msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
         }
