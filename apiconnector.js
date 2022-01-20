@@ -68,7 +68,7 @@ async function getSummonerStats(name) {
         }
     })
     if (!hit) {
-        let sumObj = await createNewSummoner('Jungle Weeb');
+        let sumObj = await createNewSummoner(name);
         return sumObj;
     }
     else {

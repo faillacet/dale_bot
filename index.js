@@ -40,6 +40,7 @@ async function printSummonerStats(msg) {
     }
     catch (e) {
         msg.channel.send("Sorry, function had an error. Oops!");
+        msg.channel.send("This will not work if summoner is unranked...");
         console.log(e);
     }
 }
