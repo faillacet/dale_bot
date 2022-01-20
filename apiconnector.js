@@ -58,7 +58,7 @@ async function printRankLeaderBoard() {
 }
 // TODO ------------------------------------------
 
-function printStats(name) {
+function printStats() {
     return summonerArray[0];
 }
 
