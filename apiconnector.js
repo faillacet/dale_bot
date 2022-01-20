@@ -58,10 +58,6 @@ async function printRankLeaderBoard() {
 }
 // TODO ------------------------------------------
 
-async function printStats(name) {
-    let x = await createNewSummoner(name);
-    return x;
+function printStats(name) {
+    return summonerArray[0];
 }
-
-// Exports
-module.exports = { printStats };

@@ -32,10 +32,11 @@ function randomlyDeleteDaleMsg(msg, id) {
     }
 }
 
-// Listen for "ready" Event - Bootup
+// Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.user.setUsername("dodger dale");
+    leagueConnector.createNewSummoner('Jungle Weeb');
 });
 
 // Listen for "message" Event
