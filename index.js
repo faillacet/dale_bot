@@ -47,12 +47,20 @@ async function printSummonerStats(msg) {
 
 async function printLeaderboard(msg) {
     try {
-        // TODO - actually print leaderboard (need to work on api end)
-        console.log();
+        let sortedPlayers = await leagueConnector.getLeaderboard();
+        let output = "TOP PLAYERS\n"
+        let counter = 0;
+        while (counter < 5 && counter < sortedPlayers.length) {
+            output += (counter + 1) + '- ' + sortedPlayers[counter].name + ': ' + sortedPlayers[counter].tier +
+            ' ' + sortedPlayers[counter].rank + '\n';
+            counter++;
+        }
+        msg.channel.send(output);
     }
     catch (e) {
         msg.channel.send("Error, check logs...");
         console.log(e);
+        return;
     }
 }
 

@@ -8,6 +8,7 @@ Summoner = require('./Summoner.js')
 
 // Table to stores previous summoners will be implemented as a backend
 let summonerArray = []
+let leaderboard = [];
 
 // Functions
 async function createNewSummoner(sumName) {
@@ -47,21 +48,14 @@ async function getSummonerStats(name) {
 
 // TODO
 async function getLeaderboard() {
-    let leaderboard = [];
-
-    // Used to sort leaderboard
-    let diamond = [];
-    let platinum = [];
-    let gold = [];
-    let silver = [];
-    let bronze = [];
-    let iron = [];
-    
-    storedSummoners.forEach(summoner => {
-        //if (summoner.rank === '')
+    leaderboard = [];
+    summonerArray.forEach(summoner => {
         leaderboard.push(summoner);
     })
 
+    leaderboard.sort((a, b) => b.rankIndex - a.rankIndex);
+
+    return leaderboard;
 }
 // --------------------------------------------
 
