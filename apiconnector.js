@@ -61,3 +61,5 @@ async function printRankLeaderBoard() {
 function printStats(name) {
     return summonerArray[0];
 }
+
+createNewSummoner('Jungle Weeb');

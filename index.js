@@ -36,7 +36,6 @@ function randomlyDeleteDaleMsg(msg, id) {
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.user.setUsername("dodger dale");
-    leagueConnector.createNewSummoner('Jungle Weeb');
 });
 
 // Listen for "message" Event
@@ -55,7 +54,7 @@ bot.on('message', msg => {
     }
     else if (msg.content === "!findSummoner") {
         msg.channel.send(String(leagueConnector.printStats('Jungle Weeb')));
-        msg.channel.send("This is a test :)");
+        msg.channel.send("This is a test :(");
     }
 
     /* TODO - Make this work
