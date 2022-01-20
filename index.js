@@ -45,6 +45,17 @@ async function printSummonerStats(msg) {
     }
 }
 
+async function printLeaderboard(msg) {
+    try {
+        // TODO - actually print leaderboard (need to work on api end)
+        console.log();
+    }
+    catch (e) {
+        msg.channel.send("Error, check logs...");
+        console.log(e);
+    }
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -64,6 +75,9 @@ bot.on('message', msg => {
     }
     else if (msg.content === "!trantMsg") {                                             
         msg.channel.send(getRandomTrantMsg());
+    }
+    else if (msg.content === "!leaderboard") {
+        printLeaderboard(msg);
     }
     else if (msg.content.includes("!stats")) {
         printSummonerStats(msg);

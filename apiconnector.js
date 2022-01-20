@@ -3,39 +3,18 @@ APIKEY = 'RGAPI-ad9bad6c-b950-44c0-9cc0-841afd001c74';
 let LeagueAPI = require('leagueapiwrapper');
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
 
-const fs = require('fs')
+// Imported Classes
+Summoner = require('./Summoner.js')
 
-// Store all Champ IDs
-const vexChampID = 711;
-
-// Summoner object Example
-const genericSummoner = {
-    name: 'Jungle Weeb',
-    id: 'QQdksGfjT9v2jED8xZjjbl7GnQG-YLaVL9AOSXKeLcEIXQ19',
-    summonerLevel: 0, 
-    tier: 'Gold', 
-    rank: 'II',
-    wins: '19',
-    losses: '24',
-    hotStreak: false
-};
-
-// Hash table key = summoner name and value = ID
+// Table to stores previous summoners will be implemented as a backend
 let summonerArray = []
 
-// Push Summoner Name + ID to  
-// TODO - add new summoner to list (db)
-
-async function printSummoner(sumName) {
-    const sumObj = await LeagueAPI.getSummonerByName(sumName);
-    console.log(sumObj);
-}
-
+// Functions
 async function createNewSummoner(sumName) {
     const obj = await LeagueAPI.getSummonerByName(sumName);
     const rank = await LeagueAPI.getLeagueRanking(obj);
-    let sum = {name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
-        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak};
+    let sum = new Summoner(obj.name, obj.id, obj.summonerLevel, rank[0].tier,
+        rank[0].rank, rank[0].wins, rank[0].losses, rank[0].hotStreak, Date.now());
     summonerArray.push(sum);
     return sum;
 }
@@ -46,18 +25,7 @@ async function getChampMastery(sumName, champID) {
     console.log(champInfo.championPoints);
 }
 
-// TODO -------------------------------------------------
-async function getRankLeaderBoard() {
-    storedSummoners.forEach(summoner => {
-        //leaderboard.push(summoner)
-    })
-}
-
-async function printRankLeaderBoard() {
-
-}
-// TODO ------------------------------------------
-
+// Functions used directly by the Bot ---------
 async function getSummonerStats(name) {
     let hit = false;
     let sumObj;
@@ -76,4 +44,25 @@ async function getSummonerStats(name) {
     }
 }
 
-module.exports = { getSummonerStats };
+// TODO
+async function getLeaderboard() {
+    let leaderboard = [];
+
+    // Used to sort leaderboard
+    let diamond = [];
+    let platinum = [];
+    let gold = [];
+    let silver = [];
+    let bronze = [];
+    let iron = [];
+    
+    storedSummoners.forEach(summoner => {
+        //if (summoner.rank === '')
+        leaderboard.push(summoner);
+    })
+
+}
+// --------------------------------------------
+
+// Make sure to include these ^
+module.exports = { getSummonerStats, getLeaderboard };
