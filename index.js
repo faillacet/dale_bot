@@ -27,7 +27,9 @@ function randomlyDeleteDaleMsg(msg, id) {
     if (msg.author.id === id) {
         var x = Math.random() * 500;
         if (x < 2) {
-            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
+            msg.delete({timeout: 0})
+            .then(msg => console.log('Deleted msg from DALE LOL'))
+            .catch(console.error);
         }
     }
 }
@@ -36,8 +38,8 @@ async function printSummonerStats(msg) {
     let name = msg.toString().substr(7, msg.content.length);
     try {
         let stats = await leagueConnector.getSummonerStats(name);
-        msg.channel.send(stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
-        "\nLosses: " + stats.losses + "\nWinrate: " + stats.winrate + "%");
+        msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
+        "\nLosses: " + stats.losses + "\nWinrate: " + stats.winrate + "%\n```");
     }
     catch (e) {
         msg.channel.send("Player DNE or unranked.");
@@ -48,14 +50,14 @@ async function printSummonerStats(msg) {
 async function printLeaderboard(msg) {
     try {
         let sortedPlayers = await leagueConnector.getLeaderboard();
-        let output = "TOP PLAYERS\n"
+        let output = "```\nTOP PLAYERS\n"
         let counter = 0;
         while (counter < 5 && counter < sortedPlayers.length) {
             output += (counter + 1) + '- ' + sortedPlayers[counter].name + ': ' + sortedPlayers[counter].tier +
             ' ' + sortedPlayers[counter].rank + '\n';
             counter++;
         }
-        msg.channel.send(output);
+        msg.channel.send(output + '```');
     }
     catch (e) {
         msg.channel.send("Error, check logs...");
