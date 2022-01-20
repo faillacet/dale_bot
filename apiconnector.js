@@ -26,12 +26,18 @@ let summonerArray = []
 // Push Summoner Name + ID to  
 // TODO - add new summoner to list (db)
 
+async function printSummoner(sumName) {
+    const sumObj = await LeagueAPI.getSummonerByName(sumName);
+    console.log(sumObj);
+}
+
 async function createNewSummoner(sumName) {
     const obj = await LeagueAPI.getSummonerByName(sumName);
     const rank = await LeagueAPI.getLeagueRanking(obj);
-    summonerArray.push({name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
-        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak});
-    return true;
+    let sum = {name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
+        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak};
+    summonerArray.push(sum);
+    return sum;
 }
 
 async function getChampMastery(sumName, champID) {
@@ -40,19 +46,7 @@ async function getChampMastery(sumName, champID) {
     console.log(champInfo.championPoints);
 }
 
-async function getSummonerRank(sumName) {
-    const sumObj = await LeagueAPI.getSummonerByName(sumName);
-    const sumRank = await LeagueAPI.getLeagueRanking(sumObj);
-    const rank = sumRank[0].tier + ' ' + sumRank[0].rank;
-    console.log(rank);
-    console.log(sumRank);
-}
-
-async function printSummoner(sumName) {
-    const sumObj = await LeagueAPI.getSummonerByName(sumName);
-    console.log(sumObj);
-}
-
+// TODO -------------------------------------------------
 async function getRankLeaderBoard() {
     storedSummoners.forEach(summoner => {
         //leaderboard.push(summoner)
@@ -62,10 +56,12 @@ async function getRankLeaderBoard() {
 async function printRankLeaderBoard() {
 
 }
+// TODO ------------------------------------------
 
 async function printStats(name) {
     let x = await createNewSummoner(name);
-    return summonerArray[0];
+    return x;
 }
 
+// Exports
 module.exports = { printStats };

@@ -53,7 +53,7 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content === "!findSummoner") {
-        msg.channel.send(leagueConnector.printStats('Jungle Weeb'));
+        msg.channel.send(String(leagueConnector.printStats('Jungle Weeb')));
         msg.channel.send("This is a test :)");
     }
 
