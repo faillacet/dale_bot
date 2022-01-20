@@ -54,6 +54,7 @@ bot.on('message', msg => {
     }
     else if (msg.content === "!findSummoner") {
         msg.channel.send(leagueConnector.printStats('Jungle Weeb'));
+        msg.channel.send("This is a test :)");
     }
 
     /* TODO - Make this work
