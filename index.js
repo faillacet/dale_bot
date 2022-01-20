@@ -12,6 +12,11 @@ const randomTrantMsg = require('./randomTrantMsg.js');
 // Legu Stuff
 const leagueConnector = require('./apiconnector.js');
 
+// Helper function, move to module later
+function boxFormat(string) {
+    return "```\n" + string + "\n```";
+}
+
 // Functions 
 function getRandomDaleMsg() {                                        
     var x = Math.floor(Math.random() * randomDaleMsg.length);
@@ -34,8 +39,8 @@ function randomlyDeleteDaleMsg(msg, id) {
     }
 }
 
-async function printSummonerStats(msg) {
-    let name = msg.toString().substr(7, msg.content.length);
+async function printSummonerStats(msg, cmd) {
+    let name = msg.toString().substr(cmd.length, msg.content.length);
     try {
         let stats = await leagueConnector.getSummonerStats(name);
         msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
@@ -66,6 +71,17 @@ async function printLeaderboard(msg) {
     }
 }
 
+function deleteSummoner(msg, cmd) {
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+    let status = leagueConnector.deleteSummoner(name);
+    if (status) {
+        msg.channel.send(boxFormat("Summoner: " + name + " sucessfully deleted."))
+    }
+    else {
+        msg.channel.send(boxFormat("Summoner not found."));
+    }
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -90,7 +106,10 @@ bot.on('message', msg => {
         printLeaderboard(msg);
     }
     else if (msg.content.includes("!stats")) {
-        printSummonerStats(msg);
+        printSummonerStats(msg, "!stats");
+    }
+    else if (msg.content.includes("!deleteSummoner")) {
+        deleteSummoner(msg, "!deleteSummoner");
     }
 
     /* TODO - Make this work

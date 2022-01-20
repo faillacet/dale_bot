@@ -46,7 +46,6 @@ async function getSummonerStats(name) {
     }
 }
 
-// TODO
 async function getLeaderboard() {
     leaderboard = [];
     summonerArray.forEach(summoner => {
@@ -57,7 +56,16 @@ async function getLeaderboard() {
 
     return leaderboard;
 }
-// --------------------------------------------
+
+function deleteSummoner(name) {
+    for (let i = 0; i < summonerArray.length; i++) {
+        if (summonerArray[i].name === name) {
+            summonerArray.splice(i, 1);
+            return true;
+        }
+    }
+    return false;
+}
 
 // Make sure to include these ^
-module.exports = { getSummonerStats, getLeaderboard };
+module.exports = { getSummonerStats, getLeaderboard, deleteSummoner };
