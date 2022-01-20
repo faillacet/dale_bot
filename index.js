@@ -10,6 +10,9 @@ const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 const leagueConnector = require('./apiconnector.js');
 
+// Global Settings
+const LBDISPLAYCOUNT = 5;
+
 // Helper function, move to module later
 function boxFormat(string) {
     return "```\n" + string + "\n```";
@@ -50,22 +53,41 @@ async function printSummonerStats(msg, cmd) {
     }
 }
 
-async function printLeaderboard(msg) {
+async function printRankLeaderboard(msg) {
     try {
-        let sortedPlayers = await leagueConnector.getLeaderboard();
-        let output = "```\nTOP PLAYERS\n"
+        let sortedPlayers = await leagueConnector.getRankLeaderboard();
+        let output = "TOP PLAYERS BY RANK\n"
         let counter = 0;
-        while (counter < 5 && counter < sortedPlayers.length) {
-            output += (counter + 1) + '- ' + sortedPlayers[counter].name + ': ' + sortedPlayers[counter].tier +
-            ' ' + sortedPlayers[counter].rank + '\n';
+        while (counter < LBDISPLAYCOUNT && counter < sortedPlayers.length) {
+            output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
+            ': ' + sortedPlayers[counter].tier + ' ' + sortedPlayers[counter].rank + '\n';
             counter++;
         }
-        msg.channel.send(output + '```');
+        msg.channel.send(boxFormat(output));
     }
     catch (e) {
         msg.channel.send("Error, check logs...");
         console.log(e);
-        return;
+    }
+}
+
+async function printWRLeaderboard(msg) {
+    try {
+        let sortedPlayers = await leagueConnector.getWRLeaderboard();
+        let output = "TOP PLAYERS BY WIN RATE\n"
+        let counter = 0;
+        console.log("test");
+        while (counter < LBDISPLAYCOUNT && counter < sortedPlayers.length) {
+            output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
+            ': ' + sortedPlayers[counter].winrate + '%\n';
+            counter++;
+        }
+        console.log("test2");
+        msg.channel.send(boxFormat(output));
+    }
+    catch (e) {
+        msg.channel.send("Error, check logs...");
+        console.log(e);
     }
 }
 
@@ -101,8 +123,11 @@ bot.on('message', msg => {
         else if (msg.content === "!trantMsg") {                                             
             msg.channel.send(getRandomTrantMsg());
         }
-        else if (msg.content === "!leaderboard") {
-            printLeaderboard(msg);
+        else if (msg.content === "!rankLeaderboard") {
+            printRankLeaderboard(msg);
+        }
+        else if (msg.content === "!winrateLeaderboard") {
+            printWRLeaderboard(msg);
         }
         else if (msg.content.includes("!stats")) {
             printSummonerStats(msg, "!stats");

@@ -46,7 +46,7 @@ async function getSummonerStats(name) {
     }
 }
 
-async function getLeaderboard() {
+async function getRankLeaderboard() {
     leaderboard = [];
     summonerArray.forEach(summoner => {
         leaderboard.push(summoner);
@@ -54,6 +54,17 @@ async function getLeaderboard() {
 
     leaderboard.sort((a, b) => b.rankIndex - a.rankIndex);
 
+    return leaderboard;
+}
+
+async function getWRLeaderboard() {
+    leaderboard = [];
+    summonerArray.forEach(summoner => {
+        leaderboard.push(summoner);
+    })
+
+    leaderboard.sort((a, b) => b.winrate - a.winrate);
+    
     return leaderboard;
 }
 
@@ -68,4 +79,4 @@ function deleteSummoner(name) {
 }
 
 // Make sure to include these ^
-module.exports = { getSummonerStats, getLeaderboard, deleteSummoner };
+module.exports = { getSummonerStats, getRankLeaderboard, getWRLeaderboard, deleteSummoner };
