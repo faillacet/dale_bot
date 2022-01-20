@@ -5,11 +5,9 @@ const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
 bot.login(TOKEN);
 
-// Defined Messages
+// Imports
 const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
-
-// Legu Stuff
 const leagueConnector = require('./apiconnector.js');
 
 // Helper function, move to module later
@@ -40,7 +38,7 @@ function randomlyDeleteDaleMsg(msg, id) {
 }
 
 async function printSummonerStats(msg, cmd) {
-    let name = msg.toString().substr(cmd.length, msg.content.length);
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     try {
         let stats = await leagueConnector.getSummonerStats(name);
         msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
@@ -95,41 +93,25 @@ bot.on('message', msg => {
 
     randomlyDeleteDaleMsg(msg, "218225932886867968");
 
-    // Command Handling
-    if (msg.content === "!daleMsg") {                                                   
-        msg.channel.send(getRandomDaleMsg());
-    }
-    else if (msg.content === "!trantMsg") {                                             
-        msg.channel.send(getRandomTrantMsg());
-    }
-    else if (msg.content === "!leaderboard") {
-        printLeaderboard(msg);
-    }
-    else if (msg.content.includes("!stats")) {
-        printSummonerStats(msg, "!stats");
-    }
-    else if (msg.content.includes("!deleteSummoner")) {
-        deleteSummoner(msg, "!deleteSummoner");
-    }
-
-    /* TODO - Make this work
-    else if (msg.content.includes("!addDaleMsg")) {                                
-        if (msg.content.slice(0,10) === "!addDaleMsg") {
-            randomDaleMsg.appendArr(msg.content.slice(11))
-            msg.channel.send("Sucessfully added Dale Msg <3")
+    // Check Each Msg to see if it is a possible command (so command search isnt done on every message)
+    if (msg.content[0] === '!') {
+        if (msg.content === "!daleMsg") {                                                   
+            msg.channel.send(getRandomDaleMsg());
         }
-        else {
-            msg.channel.send("Command not entered correctly, plz try again :)");
-        }        
-    }
-    else if (msg.content === "!testAPI") {
-
-    }
-    */
+        else if (msg.content === "!trantMsg") {                                             
+            msg.channel.send(getRandomTrantMsg());
+        }
+        else if (msg.content === "!leaderboard") {
+            printLeaderboard(msg);
+        }
+        else if (msg.content.includes("!stats")) {
+            printSummonerStats(msg, "!stats");
+        }
+        else if (msg.content.includes("!deleteSummoner")) {
+            deleteSummoner(msg, "!deleteSummoner");
+        }
+    } 
 });
-
-// Heroku Server Connection
-bot.login(process.env.TOKEN); // TOKEN is the CLient Secret
 
 /* TODO:
  - create a randomized event for dale-bot to post in chat "anyone want to go to wendy's?"
