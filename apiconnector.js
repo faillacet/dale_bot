@@ -21,13 +21,19 @@ const genericSummoner = {
 };
 
 // Hash table key = summoner name and value = ID
-let storedSummoners = []
-let leaderboard = []
+let summonerArray = []
 
 // Push Summoner Name + ID to  
 // TODO - add new summoner to list (db)
 
-// Get Champ Master by sumName and champID
+async function createNewSummoner(sumName) {
+    const obj = await LeagueAPI.getSummonerByName(sumName);
+    const rank = await LeagueAPI.getLeagueRanking(obj);
+    summonerArray.push({name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
+        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak});
+    return true;
+}
+
 async function getChampMastery(sumName, champID) {
     const sumObj = await LeagueAPI.getSummonerByName(sumName);
     const champInfo = await LeagueAPI.getChampionMasteryByChampion(sumObj.id, champID)    
@@ -57,7 +63,9 @@ async function printRankLeaderBoard() {
 
 }
 
-//printSummoner('Jungle Weeb');
-printSummoner('Jungle Weeb');
-getChampMastery('Jungle Weeb', vexChampID);
-getSummonerRank('Jungle Weeb');
+async function printStats(name) {
+    let x = await createNewSummoner(name);
+    return summonerArray[0];
+}
+
+module.exports = { printStats };

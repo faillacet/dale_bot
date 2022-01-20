@@ -9,6 +9,9 @@ bot.login(TOKEN);
 const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 
+// Legu Stuff
+const leagueConnector = require('./apiconnector.js');
+
 // Functions 
 function getRandomDaleMsg() {                                        
     var x = Math.floor(Math.random() * randomDaleMsg.length);
@@ -48,6 +51,9 @@ bot.on('message', msg => {
     }
     else if (msg.content === "!trantMsg") {                                             
         msg.channel.send(getRandomTrantMsg());
+    }
+    else if (msg.content === "!findSummoner") {
+        msg.channel.send(leagueConnector.printStats('Jungle Weeb'));
     }
 
     /* TODO - Make this work
