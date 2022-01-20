@@ -32,6 +32,18 @@ function randomlyDeleteDaleMsg(msg, id) {
     }
 }
 
+async function printSummonerStats(msg, name) {
+    let stats = await leagueConnector.getSummonerStats(name);
+    try {
+        console.log(stats);
+        msg.channel.send(stats.name + ': ' + stats.tier + ' ' + stats.rank);
+    }
+    catch (e) {
+        msg.channel.send("Sorry, function had an error. Oops!");
+        console.log(e);
+    }
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -53,13 +65,7 @@ bot.on('message', msg => {
         msg.channel.send(getRandomTrantMsg());
     }
     else if (msg.content === "!findSummoner") {
-        try {
-            msg.channel.send(leagueConnector.printStats());
-        }
-        catch {
-            msg.channel.send("Moe Failed Me...");
-        }
-        msg.channel.send("This is a test :(");
+        printSummonerStats(msg, 'Jungle Weeb');
     }
 
     /* TODO - Make this work

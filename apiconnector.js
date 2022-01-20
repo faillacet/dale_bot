@@ -58,8 +58,22 @@ async function printRankLeaderBoard() {
 }
 // TODO ------------------------------------------
 
-function printStats() {
-    return summonerArray[0];
+async function getSummonerStats(name) {
+    let hit = false;
+    let sumObj;
+    summonerArray.forEach(summoner => {
+        if (name === summoner.name) {
+            sumObj = summoner;
+            hit = true;
+        }
+    })
+    if (!hit) {
+        let sumObj = await createNewSummoner('Jungle Weeb');
+        return sumObj;
+    }
+    else {
+        return sumObj;
+    }
 }
 
-createNewSummoner('Jungle Weeb');
+module.exports = { getSummonerStats };
