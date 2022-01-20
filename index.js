@@ -20,6 +20,15 @@ function getRandomTrantMsg() {
     return randomTrantMsg[x];
 }
 
+function randomlyDeleteDaleMsg(msg, id) {
+    if (msg.author.id === id) {
+        var x = Math.random() * 500;
+        if (x < 2) {
+            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
+        }
+    }
+}
+
 // Listen for "ready" Event - Bootup
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -31,30 +40,18 @@ bot.on('ready', () => {
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
 
-    if (msg.author.id === "218225932886867968") {                                       // Condition Dale Sends a msg --- 1/100 chance to delete msg
-        var x = Math.random() * 500;
-        if (x < 2) {
-            msg.delete({timeout: 0}).then(msg => console.log('Deleted msg from DALE LOL')).catch(console.error);
-        }
-    }
+    randomlyDeleteDaleMsg(msg, "218225932886867968");
 
-    if (msg.author.id === "299319601269964801" && (msg.content.includes("http") || msg.content.includes("becky") || msg.content.includes("Becky"))) {   //deletes teris msg cuz fuk teri
-        //delete msg
-        msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
-    }
-    else if (msg.author.id === "299319601269964801" && msg.attachments.size > 0) {
-        let findImg = msg.attachments.find(attachment => attachment.filename.endsWith('png') || attachment.filename.endsWith('jpg') || attachment.filename.endsWith('gif'));
-        if (findImg != null)
-            msg.delete({timeout: 0}).then(msg => console.log('Fuck Terri')).catch(console.error);
-    }
-
-    if (msg.content === "!daleMsg") {                                                   // Command "!daleMsg" gives custom dale msg
+    // Command Handling
+    if (msg.content === "!daleMsg") {                                                   
         msg.channel.send(getRandomDaleMsg());
     }
-    else if (msg.content === "!trantMsg") {                                             // Command "!trantMsg" gives custom trant msg
+    else if (msg.content === "!trantMsg") {                                             
         msg.channel.send(getRandomTrantMsg());
     }
-    else if (msg.content.includes("!addDaleMsg")) {                                     // Command appends 
+
+    /* TODO - Make this work
+    else if (msg.content.includes("!addDaleMsg")) {                                
         if (msg.content.slice(0,10) === "!addDaleMsg") {
             randomDaleMsg.appendArr(msg.content.slice(11))
             msg.channel.send("Sucessfully added Dale Msg <3")
@@ -66,6 +63,7 @@ bot.on('message', msg => {
     else if (msg.content === "!testAPI") {
 
     }
+    */
 });
 
 // Heroku Server Connection

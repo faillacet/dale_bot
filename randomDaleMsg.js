@@ -6,4 +6,6 @@ module.exports = randomMessages = [
     "anyone want to play eternal return ???",
     "Ketchup is spicy",
     "Cya I gotta go dodge :)",
+    "At Costco, talk to u later :3",
+    "Can't. Samwich"
 ];
