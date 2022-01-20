@@ -17,24 +17,25 @@ const genericSummoner = {
     rank: 'II',
     wins: '19',
     losses: '24',
-    hotStreak: false,
-    lastupdated: Date.now()
+    hotStreak: false
 };
 
 // Hash table key = summoner name and value = ID
 let summonerArray = []
-let leaderboard = []
 
 // Push Summoner Name + ID to  
 // TODO - add new summoner to list (db)
+
+async function printSummoner(sumName) {
+    const sumObj = await LeagueAPI.getSummonerByName(sumName);
+    console.log(sumObj);
+}
+
 async function createNewSummoner(sumName) {
     const obj = await LeagueAPI.getSummonerByName(sumName);
     const rank = await LeagueAPI.getLeagueRanking(obj);
-    let sum = {
-        name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
-        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak,
-        lastUpdated: Date.now()
-    };
+    let sum = {name: obj.name, id: obj.id, summonerLevel: obj.summonerLevel, tier: rank[0].tier, 
+        rank: rank[0].rank, wins: rank[0].wins, losses: rank[0].losses, hotStreak: rank[0].hotStreak};
     summonerArray.push(sum);
     return sum;
 }
@@ -46,36 +47,33 @@ async function getChampMastery(sumName, champID) {
 }
 
 // TODO -------------------------------------------------
-function updateLeaderboard() {
-    // clear leaderboard then copy all to it
-    leaderboard = []
-    for (let i = 0; i < summonerArray.length; i++) {
-        leaderboard.push(summonerArray[i]);
-    }
-    // sort the array by rank
+async function getRankLeaderBoard() {
+    storedSummoners.forEach(summoner => {
+        //leaderboard.push(summoner)
+    })
+}
+
+async function printRankLeaderBoard() {
 
 }
 // TODO ------------------------------------------
 
 async function getSummonerStats(name) {
+    let hit = false;
     let sumObj;
-    let index = -1;
-    for (let i = 0; i < summonerArray.length; i++) {
-        if (name === summonerArray[i].name) {
-            sumObj = summonerArray[i];
-            index = i;
-            break
+    summonerArray.forEach(summoner => {
+        if (name === summoner.name) {
+            sumObj = summoner;
+            hit = true;
         }
-    }
-  
-    if (index != -1) {
+    })
+    if (!hit) {
         let sumObj = await createNewSummoner(name);
         return sumObj;
     }
     else {
-        let sumObj = await updateSummoner
         return sumObj;
     }
 }
 
-module.exports = { getSummonerStats, updateLeaderboard };
+module.exports = { getSummonerStats };
