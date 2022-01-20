@@ -59,7 +59,7 @@ function updateLeaderboard() {
 
 async function getSummonerStats(name) {
     let sumObj;
-    let hit = -1;
+    let index = -1;
     for (let i = 0; i < summonerArray.length; i++) {
         if (name === summonerArray[i].name) {
             sumObj = summonerArray[i];
@@ -73,7 +73,7 @@ async function getSummonerStats(name) {
         return sumObj;
     }
     else {
-        //let sumObj = await updateSummoner
+        let sumObj = await updateSummoner
         return sumObj;
     }
 }
