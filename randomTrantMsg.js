@@ -6,5 +6,5 @@ module.exports = randomMessages = [
     "coom",
     "my brother beats me -trant",
     "help, im addicted to POE",
-    "Moe is da besst",
+    "Moe is da wurst",
 ];

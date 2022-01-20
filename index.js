@@ -1,28 +1,26 @@
-var randomDaleMsg = require('./randomMsg.js');
-const randomTrantMsg = require('./randomTrantMsg.js');
+// Bot Stuff
 require('dotenv').config();
 const Discord = require('discord.js');
 const bot = new Discord.Client();
-
 const TOKEN = process.env.TOKEN;
-
 bot.login(TOKEN);
 
-// Test Purposes, pulling infornmation from dictionary.js
-console.log(randomDaleMsg[0]);
-console.log(randomTrantMsg[0]);
+// Defined Messages
+const randomDaleMsg = require('./randomDaleMsg.js');
+const randomTrantMsg = require('./randomTrantMsg.js');
 
-function getRandomDaleMsg() {                                        // gets random Dale Msg
-    var x = Math.floor(Math.random() * randomDaleMsg.daleMsgArr.length);
-    return randomDaleMsg.daleMsgArr[x];
+// Functions 
+function getRandomDaleMsg() {                                        
+    var x = Math.floor(Math.random() * randomDaleMsg.length);
+    return randomDaleMsg[x];
 }
 
-function getRandomTrantMsg() {                                       // gets random Trant Msg
+function getRandomTrantMsg() {                                       
     var x = Math.floor(Math.random() * randomTrantMsg.length);
     return randomTrantMsg[x];
 }
 
-// Listen for "ready" Event
+// Listen for "ready" Event - Bootup
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.user.setUsername("dodger dale");
@@ -65,16 +63,8 @@ bot.on('message', msg => {
             msg.channel.send("Command not entered correctly, plz try again :)");
         }        
     }
-});
+    else if (msg.content === "!testAPI") {
 
-bot.on('message', async message => {
-    // Join same channel as author
-    if(message.content === "alexa play despacito") {
-        // Check if user is in a voice channel
-        if(message.member.voice.channel) {
-            const connection = await message.member.voice.channel.join();
-            message.channel.send("!play despacito remix");
-        }
     }
 });
 
