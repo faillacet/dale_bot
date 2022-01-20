@@ -32,10 +32,10 @@ function randomlyDeleteDaleMsg(msg, id) {
     }
 }
 
-async function printSummonerStats(msg, name) {
-    let stats = await leagueConnector.getSummonerStats(name);
+async function printSummonerStats(msg) {
+    let name = msg.toString().substr(14,msg.content.length);
     try {
-        console.log(stats);
+        let stats = await leagueConnector.getSummonerStats(name);
         msg.channel.send(stats.name + ': ' + stats.tier + ' ' + stats.rank);
     }
     catch (e) {
@@ -64,8 +64,8 @@ bot.on('message', msg => {
     else if (msg.content === "!trantMsg") {                                             
         msg.channel.send(getRandomTrantMsg());
     }
-    else if (msg.content === "!findSummoner") {
-        printSummonerStats(msg, 'Jungle Weeb');
+    else if (msg.content.includes("!findSummoner")) {
+        printSummonerStats(msg);
     }
 
     /* TODO - Make this work
