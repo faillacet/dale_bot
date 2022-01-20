@@ -37,7 +37,7 @@ async function printSummonerStats(msg) {
     try {
         let stats = await leagueConnector.getSummonerStats(name);
         msg.channel.send(stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
-        "\nLosses: " + stats.losses + "\nWinrate: " + stats.winrate);
+        "\nLosses: " + stats.losses + "\nWinrate: " + stats.winrate + "%");
     }
     catch (e) {
         msg.channel.send("Player DNE or unranked.");

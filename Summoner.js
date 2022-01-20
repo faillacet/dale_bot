@@ -13,7 +13,8 @@ class Summoner {
   }
 
   calcWR(wins, losses) {
-    return (wins / (wins + losses)) * 100;
+    let num = (wins / (wins + losses)) * 100;
+    return (Math.round(num * 100) / 100).toFixed(2);;
   }
 }
 
