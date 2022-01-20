@@ -1,4 +1,4 @@
-APIKEY = 'RGAPI-ad9bad6c-b950-44c0-9cc0-841afd001c74';
+APIKEY = 'RGAPI-6982827c-3d27-4667-b0f0-e8f1a60d85af';
 
 let LeagueAPI = require('leagueapiwrapper');
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
@@ -19,6 +19,7 @@ async function createNewSummoner(sumName) {
     return sum;
 }
 
+// Not used yet
 async function getChampMastery(sumName, champID) {
     const sumObj = await LeagueAPI.getSummonerByName(sumName);
     const champInfo = await LeagueAPI.getChampionMasteryByChampion(sumObj.id, champID)    
