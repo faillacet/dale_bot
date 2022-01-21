@@ -11,19 +11,6 @@ let summonerArray = []
 let leaderboard = [];
 
 // Functions
-async function findNewSummoner(sumName) {
-    const obj = await LeagueAPI.getSummonerByName(sumName);
-    const rank = await LeagueAPI.getLeagueRanking(obj);
-    let index;
-    for (let i = 0; i < rank.length; i++) {
-        if (rank[i].queueType === 'RANKED_SOLO_5x5') {
-            index = i;
-        }
-    }
-    return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[index].tier,
-        rank[index].rank, rank[index].wins, rank[index].losses, rank[index].hotStreak);
-}
-
 // Not used yet
 async function getChampMastery(sumName, champID) {
     const sumObj = await LeagueAPI.getSummonerByName(sumName);
@@ -81,7 +68,20 @@ async function getWRLeaderboard() {
     return leaderboard;
 }
 
-// NO BUILT IN ERROR CHECKING!
+// Utility Stuff
+async function findNewSummoner(sumName) {
+    const obj = await LeagueAPI.getSummonerByName(sumName);
+    const rank = await LeagueAPI.getLeagueRanking(obj);
+    let index;
+    for (let i = 0; i < rank.length; i++) {
+        if (rank[i].queueType === 'RANKED_SOLO_5x5') {
+            index = i;
+        }
+    }
+    return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[index].tier,
+        rank[index].rank, rank[index].wins, rank[index].losses, rank[index].hotStreak);
+}
+
 async function updateSummoners() {
     summonerArray.forEach(summoner => {
         summoner = findNewSummoner(summoner.name);
@@ -100,5 +100,5 @@ function deleteSummoner(name) {
 
 // Make sure to include these ^
 module.exports = { 
-    getSummonerStats, getRankLeaderboard, getWRLeaderboard, updateSummoners, deleteSummoner 
+    getSummonerStats, getRankLeaderboard, getWRLeaderboard, updateSummoners, deleteSummoner
 };
