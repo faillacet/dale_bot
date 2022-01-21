@@ -9,6 +9,7 @@ bot.login(TOKEN);
 const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 const leagueConnector = require('./apiconnector.js');
+const commandList = require('./commandList.js');
 
 // Legu Updater
 const cron = require('cron');
@@ -26,6 +27,14 @@ function boxFormat(string) {
 }
 
 // Functions 
+function printHelpScreen(msg) {
+    let output =  "HELP PAGE - AVAILABLE COMMANDS\n";
+    for (let i = 0; i < commandList.length; i++) {
+        output += commandList[i];
+    }
+    msg.channel.send(boxFormat(output));
+}
+
 function getRandomDaleMsg() {                                        
     var x = Math.floor(Math.random() * randomDaleMsg.length);
     return randomDaleMsg[x];
@@ -122,6 +131,9 @@ bot.on('message', msg => {
 
     // Check Each Msg to see if it is a possible command (so command search isnt done on every message)
     if (msg.content[0] === '!') {
+        if (msg.content === "!help") {
+            printHelpScreen(msg);
+        }
         if (msg.content === "!daleMsg") {                                                   
             msg.channel.send(getRandomDaleMsg());
         }
