@@ -11,13 +11,11 @@ let summonerArray = []
 let leaderboard = [];
 
 // Functions
-async function createNewSummoner(sumName) {
+async function findNewSummoner(sumName) {
     const obj = await LeagueAPI.getSummonerByName(sumName);
     const rank = await LeagueAPI.getLeagueRanking(obj);
-    let sum = new Summoner(obj.name, obj.id, obj.summonerLevel, rank[0].tier,
-        rank[0].rank, rank[0].wins, rank[0].losses, rank[0].hotStreak, Date.now());
-    summonerArray.push(sum);
-    return sum;
+    return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[0].tier,
+        rank[0].rank, rank[0].wins, rank[0].losses, rank[0].hotStreak);
 }
 
 // Not used yet
@@ -37,12 +35,21 @@ async function getSummonerStats(name) {
             hit = true;
         }
     })
+
+    // if summoner not in db, add to db
     if (!hit) {
-        let sumObj = await createNewSummoner(name);
+        let sumObj = await findNewSummoner(name);
+        summonerArray.push(sumObj);
         return sumObj;
     }
     else {
-        return sumObj;
+        // stats over an hour old, update them
+        if (sumObj.lastUpdated < Date.now() - 3600000) {
+            return updateSummoner(sumObj.name);
+        } 
+        else {
+            return sumObj;
+        }
     }
 }
 
@@ -64,8 +71,15 @@ async function getWRLeaderboard() {
     })
 
     leaderboard.sort((a, b) => b.winrate - a.winrate);
-    
+
     return leaderboard;
+}
+
+// NO BUILT IN ERROR CHECKING!
+async function updateSummoners() {
+    summonerArray.forEach(summoner => {
+        summoner = findNewSummoner(summoner.name);
+    })
 }
 
 function deleteSummoner(name) {
@@ -79,4 +93,6 @@ function deleteSummoner(name) {
 }
 
 // Make sure to include these ^
-module.exports = { getSummonerStats, getRankLeaderboard, getWRLeaderboard, deleteSummoner };
+module.exports = { 
+    getSummonerStats, getRankLeaderboard, getWRLeaderboard, updateSummoners, deleteSummoner 
+};

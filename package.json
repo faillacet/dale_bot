@@ -4,6 +4,7 @@
   "description": "Dale discord bot",
   "main": "index.js",
   "dependencies": {
+    "cron": "^1.8.2",
     "discord": "^0.8.2",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",

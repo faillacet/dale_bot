@@ -10,6 +10,13 @@ const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
 const leagueConnector = require('./apiconnector.js');
 
+// Legu Updater
+const cron = require('cron');
+let statUpdater = new cron.CronJob('00 00 * * * *', () => {
+    leagueConnector.updateSummoners();
+});
+statUpdater.start();
+
 // Global Settings
 const LBDISPLAYCOUNT = 5;
 
@@ -76,13 +83,11 @@ async function printWRLeaderboard(msg) {
         let sortedPlayers = await leagueConnector.getWRLeaderboard();
         let output = "TOP PLAYERS BY WIN RATE\n"
         let counter = 0;
-        console.log("test");
         while (counter < LBDISPLAYCOUNT && counter < sortedPlayers.length) {
             output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
             ': ' + sortedPlayers[counter].winrate + '%\n';
             counter++;
         }
-        console.log("test2");
         msg.channel.send(boxFormat(output));
     }
     catch (e) {
@@ -122,6 +127,9 @@ bot.on('message', msg => {
         }
         else if (msg.content === "!trantMsg") {                                             
             msg.channel.send(getRandomTrantMsg());
+        }
+        else if (msg.content === "!updateSummoners") {
+            leagueConnector.updateSummoners();
         }
         else if (msg.content === "!rankLeaderboard") {
             printRankLeaderboard(msg);

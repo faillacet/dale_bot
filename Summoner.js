@@ -1,5 +1,5 @@
 class Summoner {
-  constructor(name, id, summonerLevel, tier, rank, wins, losses, hotStreak, lastUpdated) {
+  constructor(name, id, summonerLevel, tier, rank, wins, losses, hotStreak) {
     this.name = name;
     this.id = id;
     this.summonerLevel = summonerLevel;
@@ -9,7 +9,7 @@ class Summoner {
     this.losses = losses;
     this.winrate = this.calcWR(wins, losses);
     this.hotStreak = hotStreak;
-    this.lastUpdated = lastUpdated;
+    this.lastUpdated = Date.now();
     this.rankIndex = this.calcRankIndex(tier, rank);
   }
 
