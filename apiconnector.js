@@ -17,11 +17,11 @@ async function findNewSummoner(sumName) {
     let index;
     for (let i = 0; i < rank.length; i++) {
         if (rank[i].queueType === 'RANKED_SOLO_5x5') {
-            index = 1;
+            index = i;
         }
     }
-    return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[0].tier,
-        rank[0].rank, rank[0].wins, rank[0].losses, rank[0].hotStreak);
+    return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[index].tier,
+        rank[index].rank, rank[index].wins, rank[index].losses, rank[index].hotStreak);
 }
 
 // Not used yet
