@@ -1,6 +1,6 @@
 require("dotenv").config();
 const APIKEY = process.env.APIKEY;
-const LeagueAPI = require("leagueapiwrapper");
+let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
 
 // Imported Classes
