@@ -1,5 +1,5 @@
-APIKEY = "RGAPI-2ebe8f7b-f7c4-45c0-9940-36f4e467feda";
-
+require("dotenv").config();
+const APIKEY = process.env.APIKEY;
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
 
