@@ -14,6 +14,12 @@ let leaderboard = [];
 async function findNewSummoner(sumName) {
     const obj = await LeagueAPI.getSummonerByName(sumName);
     const rank = await LeagueAPI.getLeagueRanking(obj);
+    let index;
+    for (let i = 0; i < rank.length; i++) {
+        if (rank[i].queueType === 'RANKED_SOLO_5x5') {
+            index = 1;
+        }
+    }
     return new Summoner(obj.name, obj.id, obj.summonerLevel, rank[0].tier,
         rank[0].rank, rank[0].wins, rank[0].losses, rank[0].hotStreak);
 }

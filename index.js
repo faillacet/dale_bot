@@ -155,6 +155,10 @@ bot.on('message', msg => {
         else if (msg.content.includes("!deleteSummoner")) {
             deleteSummoner(msg, "!deleteSummoner");
         }
+        // TEST COMMAND
+        else if (msg.content === "!test") {
+            leagueConnector.printSummonerStats(msg, "!test");
+        }
     } 
 });
 
