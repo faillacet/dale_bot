@@ -4,6 +4,6 @@ Desktop.ini
 
 # Application specific files
 venv
-env
+.env
 node_modules
 .sass-cache
