@@ -1,0 +1,9 @@
+# Folder view configuration files
+.DS_Store
+Desktop.ini
+
+# Application specific files
+venv
+env
+node_modules
+.sass-cache
