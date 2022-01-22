@@ -14,7 +14,7 @@ const commandList = require('./commandList.js');
 // Legu Updater
 const cron = require('cron');
 let statUpdater = new cron.CronJob('00 00 * * * *', () => {
-    leagueConnector.updateSummoners();
+    updateSummoners();
 });
 statUpdater.start();
 
@@ -116,6 +116,10 @@ function deleteSummoner(msg, cmd) {
     }
 }
 
+async function updateSummoners() {
+    await leagueConnector.updateSummoners();
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -141,7 +145,7 @@ bot.on('message', msg => {
             msg.channel.send(getRandomTrantMsg());
         }
         else if (msg.content === "!updateSummoners") {
-            leagueConnector.updateSummoners();
+            updateSummoners();
         }
         else if (msg.content === "!rankLeaderboard") {
             printRankLeaderboard(msg);
