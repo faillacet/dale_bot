@@ -92,9 +92,16 @@ async function findNewSummoner(sumName) {
 }
 
 async function updateSummoners() {
-  for (let i = 0; i < summonerArray.length; i++) {
-    let name = summonerArray[i].name;
-    summonerArray[i] = await findNewSummoner(name);
+  try {
+    for (let i = 0; i < summonerArray.length; i++) {
+      let name = summonerArray[i].name;
+      summonerArray[i] = await findNewSummoner(name);
+    }
+    return true;
+  }
+  catch (e) {
+    console.log(e);
+    return false;
   }
 }
 

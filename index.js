@@ -116,8 +116,14 @@ function deleteSummoner(msg, cmd) {
     }
 }
 
-async function updateSummoners() {
-    await leagueConnector.updateSummoners();
+async function updateSummoners(msg) {
+    let status = await leagueConnector.updateSummoners();
+    if (status) {
+        msg.channel.send(boxFormat("Summoners Successfully Updated."));
+    }
+    else {
+        msg.channel.send(boxFormat("Error, check logs."));
+    }
 }
 
 // Listen for "ready" Event
@@ -145,7 +151,7 @@ bot.on('message', msg => {
             msg.channel.send(getRandomTrantMsg());
         }
         else if (msg.content === "!updateSummoners") {
-            updateSummoners();
+            updateSummoners(msg);
         }
         else if (msg.content === "!rankLeaderboard") {
             printRankLeaderboard(msg);
