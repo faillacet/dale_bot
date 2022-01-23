@@ -1,5 +1,6 @@
 module.exports = commandList = [
     "!help - View Help Page\n",
+    "!setDisplayCount - Sets Number Displayed By Leaderboards\n",
     "!daleMsg - Bot responds with random dale message\n",
     "!trantMsg - Bot responds with random dale message\n",
     "!updateSummoners - Manually update summoner DB\n",

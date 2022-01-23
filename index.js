@@ -19,7 +19,7 @@ let statUpdater = new cron.CronJob('00 00 * * * *', () => {
 statUpdater.start();
 
 // Global Settings
-const LBDISPLAYCOUNT = 5;
+let LBDISPLAYCOUNT = 5;
 
 // Helper function, move to module later
 function boxFormat(string) {
@@ -54,6 +54,20 @@ function randomlyDeleteDaleMsg(msg, id) {
             .catch(console.error);
         }
     }
+}
+
+function setLBDisplayCount(msg, cmd) {
+    let num = msg.toString().substr(cmd.length + 1, msg.content.length);
+    if (num < 5) {
+        msg.channel.send('Number cannot be less than 5.');
+        return;
+    }
+    else if (num > 10) {
+        msg.channel.send('Number cannot be greater than 10');
+        return;
+    }
+    LBDISPLAYCOUNT = num;
+    msg.channel.send('Display Count Successfully Updated.');
 }
 
 async function printSummonerStats(msg, cmd) {
@@ -160,6 +174,9 @@ bot.on('message', msg => {
         }
         else if (msg.content === "!trantMsg") {                                             
             msg.channel.send(getRandomTrantMsg());
+        }
+        else if (msg.content === "!setDisplayCount") {
+            setLBDisplayCount(msg, "!setDisplayCount");
         }
         else if (msg.content === "!updateSummoners") {
             updateSummoners(msg);
