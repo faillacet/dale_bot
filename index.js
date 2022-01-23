@@ -66,7 +66,7 @@ function setLBDisplayCount(msg, cmd) {
         msg.channel.send('Number cannot be greater than 10');
         return;
     }
-    LBDISPLAYCOUNT = num;
+    LBDISPLAYCOUNT = parseInt(num);
     msg.channel.send('Display Count Successfully Updated.');
 }
 

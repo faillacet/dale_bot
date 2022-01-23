@@ -1,11 +1,12 @@
 require("dotenv").config();
 const mysql = require('mysql');
-const MYSQLPASS = process.env.MYSQLPASS;
 const util = require('util');
+const MYSQLPASS = process.env.MYSQLPASS;
 const APIKEY = process.env.APIKEY;
 const Summoner = require("./Summoner.js");
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
+const Constants = require('./Constants.js');
 
 // Connect to DB
 const connection = mysql.createConnection({
@@ -18,7 +19,7 @@ const connection = mysql.createConnection({
 // Convert Object to Promise
 const query = util.promisify(connection.query).bind(connection);
 
-// Returns results
+// Function Used to access DB via query and passed values
 async function queryDB(qry, values) {
   try {
     const x = await query(qry, values);
@@ -109,3 +110,47 @@ async function updateAllSummoners() {
 module.exports = {
   getStats, getRankLeaderboard, getWRLeaderboard, deleteSummoner, updateAllSummoners
 };
+
+// Non-Exported Functions (Backend stuff) ----------------------------------------------
+async function getMatchHistory(name) {
+  const sumList = await queryDB('SELECT * FROM summoner WHERE name = ?', name);
+  // If not in DB, enter into db then repeat
+  if (sumList.length < 1) {
+    await insertSumIntoDB(name);
+    const sumList = await queryDB('SELECT * FROM summoner WHERE name = ?', name);
+  }
+  // Get Last 20 Matches from Summoner
+  const matchList = await LeagueAPI.getMatchList(sumList[0].puuid);
+  return matchList;
+}
+
+async function getMatchData(matchId) {
+  const matchData = await LeagueAPI.getMatch(matchId);
+  return matchData;
+}
+
+// OVERLOADS API LIMIT USE ONLY ON DOWN TIME
+async function pushRankedGames(name) {
+  // Get Last 20 Games
+  let matchIdList = await getMatchHistory(name);
+  // Pull Data For Each game
+  let matchList = [];
+  for (let i = 0; i < matchIdList.length; i++) {
+    let temp = (await getMatchData(matchIdList[i])).info;
+    if (temp.queueId === Constants.QUEUETYPE.rankedSolo) {
+      matchList.push();
+    }
+  }
+  console.log(matchList);
+
+}
+
+async function tester() {
+  let x = await getMatchHistory('Jungle Weeb');
+  let game = await getMatchData(x[0]);
+  for (let i = 0; game.length; i++) {
+
+  }
+}
+
+tester();
