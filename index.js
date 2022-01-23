@@ -8,8 +8,8 @@ bot.login(TOKEN);
 // Imports
 const randomDaleMsg = require('./randomDaleMsg.js');
 const randomTrantMsg = require('./randomTrantMsg.js');
-const leagueConnector = require('./apiconnector.js');
 const commandList = require('./commandList.js');
+const DBConnector = require('./DBConnector.js')
 
 // Legu Updater
 const cron = require('cron');
@@ -59,9 +59,10 @@ function randomlyDeleteDaleMsg(msg, id) {
 async function printSummonerStats(msg, cmd) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     try {
-        let stats = await leagueConnector.getSummonerStats(name);
-        msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.rank + "\nWins: " + stats.wins + 
-        "\nLosses: " + stats.losses + "\nWinrate: " + stats.winrate + "%\n```");
+        let stats = await DBConnector.getStats(name);
+        msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.sumRank + "\nLP: " + 
+        stats.leaguePoints + "\nWins: " + stats.wins + "\nLosses: " + stats.losses + "\nWinrate: " + 
+        stats.winrate + "%\n```");
     }
     catch (e) {
         msg.channel.send("Player DNE or unranked.");
@@ -71,12 +72,13 @@ async function printSummonerStats(msg, cmd) {
 
 async function printRankLeaderboard(msg) {
     try {
-        let sortedPlayers = await leagueConnector.getRankLeaderboard();
+        let sortedPlayers = await DBConnector.getRankLeaderboard(LBDISPLAYCOUNT);
         let output = "TOP PLAYERS BY RANK\n"
         let counter = 0;
         while (counter < LBDISPLAYCOUNT && counter < sortedPlayers.length) {
-            output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
-            ': ' + sortedPlayers[counter].tier + ' ' + sortedPlayers[counter].rank + '\n';
+            output += (counter + 1) + '- ' + sortedPlayers[counter].name + ': ' + 
+            sortedPlayers[counter].tier + ' ' + sortedPlayers[counter].sumRank + ' ' + 
+            sortedPlayers[counter].leaguePoints + ' LP\n';
             counter++;
         }
         msg.channel.send(boxFormat(output));
@@ -89,7 +91,7 @@ async function printRankLeaderboard(msg) {
 
 async function printWRLeaderboard(msg) {
     try {
-        let sortedPlayers = await leagueConnector.getWRLeaderboard();
+        let sortedPlayers = await DBConnector.getWRLeaderboard(LBDISPLAYCOUNT);
         let output = "TOP PLAYERS BY WIN RATE\n"
         let counter = 0;
         while (counter < LBDISPLAYCOUNT && counter < sortedPlayers.length) {
@@ -105,24 +107,33 @@ async function printWRLeaderboard(msg) {
     }
 }
 
-function deleteSummoner(msg, cmd) {
+async function deleteSummoner(msg, cmd) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
-    let status = leagueConnector.deleteSummoner(name);
-    if (status) {
-        msg.channel.send(boxFormat("Summoner: " + name + " sucessfully deleted."))
+    try {
+        
+        let status = await DBConnector.deleteSummoner(name);
+        if (status) {
+            msg.channel.send(boxFormat("Summoner: " + name + " sucessfully deleted."))
+        }
+        else {
+            msg.channel.send(boxFormat("Summoner not found."));
+        }
     }
-    else {
-        msg.channel.send(boxFormat("Summoner not found."));
+    catch (e) {
+        msg.channel.send(boxFormat("Error, check logs."));
+        console.log(e);
     }
+    
 }
 
 async function updateSummoners(msg) {
-    let status = await leagueConnector.updateSummoners();
-    if (status) {
-        msg.channel.send(boxFormat("Summoners Successfully Updated."));
+    try {
+        await DBConnector.updateAllSummoners();
+        msg.channel.send(boxFormat('Database Sucessfully Updated.'));
     }
-    else {
-        msg.channel.send(boxFormat("Error, check logs."));
+    catch (e) {
+        msg.channel.send(boxFormat('Error, check logs.'));
+        console.log(e);
     }
 }
 

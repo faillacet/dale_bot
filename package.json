@@ -8,9 +8,10 @@
     "discord": "^0.8.2",
     "discord.js": "^12.5.1",
     "dotenv": "^8.2.0",
-    "leagueapiwrapper": "^2.5.0"
+    "leagueapiwrapper": "^2.5.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^2.3.3"
   },
-  "devDependencies": {},
   "scripts": {
     "start": "node index.js",
     "test": "node index.js"
