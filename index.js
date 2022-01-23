@@ -13,6 +13,7 @@ const DBConnector = require('./DBConnector.js')
 // Legu Updater
 const cron = require('cron');
 let statUpdater = new cron.CronJob('00 00 * * * *', () => {
+    console.log("UPDATED DB AT: " + Date.now());
     updateSummoners();
 });
 statUpdater.start();
