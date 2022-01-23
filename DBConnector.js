@@ -104,7 +104,7 @@ async function updateAllSummoners() {
   let allSummoners = await queryDB('SELECT * FROM summoner');
   await queryDB('DELETE FROM summoner');
   for (let i = 0; i < allSummoners.length; i++) {
-    insertSumIntoDB(allSummoners[i].name);
+    await insertSumIntoDB(allSummoners[i].name);
   }
 }
 
