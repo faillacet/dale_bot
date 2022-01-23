@@ -175,9 +175,6 @@ bot.on('message', msg => {
         else if (msg.content === "!trantMsg") {                                             
             msg.channel.send(getRandomTrantMsg());
         }
-        else if (msg.content === "!setDisplayCount") {
-            setLBDisplayCount(msg, "!setDisplayCount");
-        }
         else if (msg.content === "!updateSummoners") {
             updateSummoners(msg);
         }
@@ -192,6 +189,9 @@ bot.on('message', msg => {
         }
         else if (msg.content.includes("!deleteSummoner")) {
             deleteSummoner(msg, "!deleteSummoner");
+        }
+        else if (msg.content.includes("!setDisplayCount")) {
+            setLBDisplayCount(msg, "!setDisplayCount");
         }
     } 
 });
