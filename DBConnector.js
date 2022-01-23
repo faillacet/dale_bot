@@ -102,9 +102,123 @@ async function deleteSummoner(name) {
 
 async function updateAllSummoners() {
   let allSummoners = await queryDB('SELECT * FROM summoner');
-  await queryDB('DELETE FROM summoner');
   for (let i = 0; i < allSummoners.length; i++) {
-    await insertSumIntoDB(allSummoners[i].name);
+    let temp = await getSummonerFromAPI(allSummoners[i].name);
+    let qry = 'UPDATE summoner SET';
+    let inputs = [];
+    let duplicate = false;
+
+    // Check For Differences
+    if (temp.name != allSummoners[i].name) {
+      qry += ' name = ?'
+      duplicate = true;
+      inputs.push(temp.name);
+    }
+    if (temp.profileIconId != allSummoners[i].profileIconId) {
+      if (duplicate) {
+        qry += ', profileIconId = ?';
+      }
+      else {
+        qry += ' profileIconId = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.profileIconId);
+    }
+    if (temp.summonerLevel != allSummoners[i].summonerLevel) {
+      if (duplicate) {
+        qry += ', summonerLevel = ?';
+      }
+      else {
+        qry += ' summonerLevel = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.summonerLevel);
+    }
+    if (temp.tier != allSummoners[i].tier) {
+      if (duplicate) {
+        qry += ', tier = ?';
+      }
+      else {
+        qry += ' tier = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.tier);
+    }
+    if (temp.sumRank != allSummoners[i].sumRank) {
+      if (duplicate) {
+        qry += ', sumRank = ?';
+      }
+      else {
+        qry += ' sumRank = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.sumRank);
+    }
+    if (temp.leaguePoints != allSummoners[i].leaguePoints) {
+      if (duplicate) {
+        qry += ', leaguePoints = ?';
+      }
+      else {
+        qry += ' leaguePoints = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.leaguePoints);
+    }
+    if (temp.wins != allSummoners[i].wins) {
+      if (duplicate) {
+        qry += ', wins = ?';
+      }
+      else {
+        qry += ' wins = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.wins);
+    }
+    if (temp.losses != allSummoners[i].losses) {
+      if (duplicate) {
+        qry += ', losses = ?';
+      }
+      else {
+        qry += ' losses = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.losses);
+    }
+    if (temp.winrate != allSummoners[i].winrate) {
+      if (duplicate) {
+        qry += ', winrate = ?';
+      }
+      else {
+        qry += ' winrate = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.winrate);
+    }
+    if (temp.lastUpdated != allSummoners[i].lastUpdated) {
+      if (duplicate) {
+        qry += ', lastUpdated = ?';
+      }
+      else {
+        qry += ' lastUpdated = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.lastUpdated);
+    }
+    if (temp.rankIndex != allSummoners[i].rankIndex) {
+      if (duplicate) {
+        qry += ', rankIndex = ?';
+      }
+      else {
+        qry += ' rankIndex = ?';
+      }
+      duplicate = true;
+      inputs.push(temp.rankIndex);
+    }
+    
+    // Push Changes To DB
+    qry += ' WHERE puuid = ?'
+    inputs.push(temp.puuid);
+    await queryDB(qry, inputs);
   }
 }
 
