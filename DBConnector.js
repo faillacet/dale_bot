@@ -7,7 +7,6 @@ const Summoner = require("./Summoner.js");
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
 const Constants = require('./Constants.js');
-const { GuildTemplate } = require("discord.js");
 
 // Connect to DB
 const connection = mysql.createConnection({
@@ -246,6 +245,7 @@ async function getMatchData(matchId) {
 
 // OVERLOADS API LIMIT USE ONLY ON DOWN TIME
 async function pushRankedGames(name) {
+  let counter = 0;
   // Get Puuid
   const puuid = (await queryDB('SELECT puuid FROM summoner WHERE name = ?', name))[0].puuid;
   // Get Last 20 Games
@@ -257,20 +257,50 @@ async function pushRankedGames(name) {
     if (temp.info.queueId === Constants.QUEUETYPE.rankedSolo && (await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE gameID = ?', temp.info.gameId))[0]['COUNT(*)'] === 0) {
       for (let j = 0; j < temp.info.participants.length; j++) {
         if (puuid === temp.info.participants[j].puuid) {
-          const p = temp.info.participants[j];
-          await queryDB('INSERT INTO rankedmatch VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-          [temp.info.gameId, temp.info.gameDuration, p.assists, p.baronKills, p.bountyLevel, p.champLevel, p.championId, p.damageDealtToBuildings, p.damageDealtToObjectives, p.damageDealtToTurrets, 
-          p.damageSelfMitigated, p.deaths, p.detectorWardsPlaced, p.doubleKills, p.dragonKills, p.firstBloodAssist, p.firstBloodKill, p.firstTowerAssist, p.firstTowerKill, p.gameEndedInEarlySurrender, 
-          p.gameEndedInSurrender, p.goldEarned, p.goldSpent, p.individualPosition, p.inhibitorKills, p.inhibitorTakedowns, p.inhibitorsLost, p.killingSprees, p.kills, p.lane, p.largestKillingSpree, 
-          p.largestMultiKill, p.magicDamageDealt, p.magicDamageDealtToChampions, p.magicDamageTaken, p.neutralMinionsKilled, p.objectivesStolen, p.objectivesStolenAssists, p.pentaKills, 
-          p.physicalDamageDealt, p.physicalDamageDealtToChampions, p.physicalDamageTaken, p.puuid, p.quadraKills, p.role, p.sightWardsBoughtInGame, p.teamEarlySurrendered, p.timeCCingOthers, p.timePlayed, 
-          p.totalDamageDealt, p.totalDamageDealtToChampions, p.totalDamageShieldedOnTeammates, p.totalDamageTaken, p. totalHeal, p.totalHealsOnTeammates, p.totalMinionsKilled, p.totalTimeCCDealt, 
-          p.totalTimeSpentDead, p.totalUnitsHealed, p.tripleKills, p.trueDamageDealt, p.trueDamageDealtToChampions, p.trueDamageTaken, p.turretKills, p.turretTakedowns, p.turretsLost, p.visionScore, 
-          p.wardsKilled, p.wardsPlaced, p.win]);
+          if ((await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE gameId = ?', temp.info.gameId)) != 1) {
+            const p = temp.info.participants[j];
+            await queryDB('INSERT INTO rankedmatch VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+            [temp.info.gameId, temp.info.gameStartTimestamp, temp.info.gameDuration, p.assists, p.baronKills, p.bountyLevel, p.champLevel, p.championId, p.damageDealtToBuildings, p.damageDealtToObjectives, p.damageDealtToTurrets, 
+            p.damageSelfMitigated, p.deaths, p.detectorWardsPlaced, p.doubleKills, p.dragonKills, p.firstBloodAssist, p.firstBloodKill, p.firstTowerAssist, p.firstTowerKill, p.gameEndedInEarlySurrender, 
+            p.gameEndedInSurrender, p.goldEarned, p.goldSpent, p.individualPosition, p.inhibitorKills, p.inhibitorTakedowns, p.inhibitorsLost, p.killingSprees, p.kills, p.lane, p.largestKillingSpree, 
+            p.largestMultiKill, p.magicDamageDealt, p.magicDamageDealtToChampions, p.magicDamageTaken, p.neutralMinionsKilled, p.objectivesStolen, p.objectivesStolenAssists, p.pentaKills, 
+            p.physicalDamageDealt, p.physicalDamageDealtToChampions, p.physicalDamageTaken, p.puuid, p.quadraKills, p.role, p.sightWardsBoughtInGame, p.teamEarlySurrendered, p.timeCCingOthers, p.timePlayed, 
+            p.totalDamageDealt, p.totalDamageDealtToChampions, p.totalDamageShieldedOnTeammates, p.totalDamageTaken, p. totalHeal, p.totalHealsOnTeammates, p.totalMinionsKilled, p.totalTimeCCDealt, 
+            p.totalTimeSpentDead, p.totalUnitsHealed, p.tripleKills, p.trueDamageDealt, p.trueDamageDealtToChampions, p.trueDamageTaken, p.turretKills, p.turretTakedowns, p.turretsLost, p.visionScore, 
+            p.wardsKilled, p.wardsPlaced, p.win]);
+            counter++;
+          }
         }
       }
     }
   }
+  return counter;
 }
 
-//pushRankedGames('Jungle Weeb');
+// Lets Play w/ the Stats
+async function grabAllRankedGames() {
+  try {
+    let allSummoners = await queryDB('SELECT name FROM summoner');
+    for (let i = 0; i < allSummoners.length; i++) {
+      const amountAdded = await pushRankedGames(allSummoners[i].name);
+      console.log(amountAdded + ' matches added to DB.');
+      // 2 Minute Wait Between Pulls - Reduce chance of exceeding rate limit
+      await new Promise(resolve => setTimeout(resolve, 120000));
+    }
+  }
+  catch (e) {
+    console.log("DIDNT WORK");
+    console.log(e);
+  }
+  
+}
+
+async function test(name) {
+  const matchIdList = await getMatchHistory(name);
+  // Pull Data For Each game Then Push it To DB if doesnt already exist
+  const temp = await getMatchData(matchIdList[0]);
+  console.log(temp);
+}
+
+//test('Jungle Weeb');
+//grabAllRankedGames();

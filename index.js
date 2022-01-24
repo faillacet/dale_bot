@@ -19,7 +19,7 @@ let statUpdater = new cron.CronJob('00 00 * * * *', () => {
 statUpdater.start();
 
 // Global Settings
-let LBDISPLAYCOUNT = 5;
+let LBDISPLAYCOUNT = 10;
 
 // Helper function, move to module later
 function boxFormat(string) {
