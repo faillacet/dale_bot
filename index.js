@@ -57,12 +57,16 @@ function randomlyDeleteDaleMsg(msg, id) {
     }
 }
 
-function toggleDaleDeleteMsg() {
-    if (DELETEDALEMSG) {
-        DELETEDALEMSG = false;
-    }
-    else {
-        DELETEDALEMSG = true;
+function fuqDale(msg) {
+    if (msg.author.id === '173944478770397186' || msg.author.id === '201177301264629760') {
+        if (DELETEDALEMSG) {
+            DELETEDALEMSG = false;
+            msg.channel.send(boxFormat('No longer fuqing dale...'));
+        }
+        else {
+            DELETEDALEMSG = true;
+            msg.channel.send(boxFormat('FUQ DALE!!!!'));
+        }
     }
 }
 
@@ -191,7 +195,7 @@ bot.on('message', msg => {
             msg.channel.send(getRandomTrantMsg());
         }
         else if (msg.content === "!fuqDale") {
-            toggleDaleDeleteMsg();
+            fuqDale(msg);
         }
         else if (msg.content === "!updateSummoners") {
             updateSummoners(msg);
