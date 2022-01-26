@@ -20,6 +20,7 @@ statUpdater.start();
 
 // Global Settings
 let LBDISPLAYCOUNT = 10;
+let DELETEDALEMSG = false;
 
 // Helper function, move to module later
 function boxFormat(string) {
@@ -53,6 +54,15 @@ function randomlyDeleteDaleMsg(msg, id) {
             .then(msg => console.log('Deleted msg from DALE LOL'))
             .catch(console.error);
         }
+    }
+}
+
+function toggleDaleDeleteMsg() {
+    if (DELETEDALEMSG) {
+        DELETEDALEMSG = false;
+    }
+    else {
+        DELETEDALEMSG = true;
     }
 }
 
@@ -163,17 +173,25 @@ bot.on('ready', () => {
 bot.on('message', msg => {
 
     randomlyDeleteDaleMsg(msg, "218225932886867968");
+    if (msg.author.id === '218225932886867968' && DELETEDALEMSG) {
+        msg.delete()
+        .then(() => console.log('Deleted msg from DALE LOL'))
+        .catch(console.error);
+    }
 
     // Check Each Msg to see if it is a possible command (so command search isnt done on every message)
     if (msg.content[0] === '!') {
         if (msg.content === "!help") {
             printHelpScreen(msg);
         }
-        if (msg.content === "!daleMsg") {                                                   
+        else if (msg.content === "!daleMsg") {                                                   
             msg.channel.send(getRandomDaleMsg());
         }
         else if (msg.content === "!trantMsg") {                                             
             msg.channel.send(getRandomTrantMsg());
+        }
+        else if (msg.content === "!fuqDale") {
+            toggleDaleDeleteMsg();
         }
         else if (msg.content === "!updateSummoners") {
             updateSummoners(msg);

@@ -259,8 +259,8 @@ async function pushRankedGames(name) {
         if (puuid === temp.info.participants[j].puuid) {
           if ((await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE gameId = ?', temp.info.gameId)) != 1) {
             const p = temp.info.participants[j];
-            await queryDB('INSERT INTO rankedmatch VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
-            [temp.info.gameId, temp.info.gameStartTimestamp, temp.info.gameDuration, p.assists, p.baronKills, p.bountyLevel, p.champLevel, p.championId, p.damageDealtToBuildings, p.damageDealtToObjectives, p.damageDealtToTurrets, 
+            await queryDB('INSERT INTO rankedmatch VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+            [temp.info.gameId, temp.info.gameStartTimestamp, temp.info.gameDuration, p.assists, p.baronKills, p.bountyLevel, p.champLevel, p.championId, p.championName, p.damageDealtToBuildings, p.damageDealtToObjectives, p.damageDealtToTurrets, 
             p.damageSelfMitigated, p.deaths, p.detectorWardsPlaced, p.doubleKills, p.dragonKills, p.firstBloodAssist, p.firstBloodKill, p.firstTowerAssist, p.firstTowerKill, p.gameEndedInEarlySurrender, 
             p.gameEndedInSurrender, p.goldEarned, p.goldSpent, p.individualPosition, p.inhibitorKills, p.inhibitorTakedowns, p.inhibitorsLost, p.killingSprees, p.kills, p.lane, p.largestKillingSpree, 
             p.largestMultiKill, p.magicDamageDealt, p.magicDamageDealtToChampions, p.magicDamageTaken, p.neutralMinionsKilled, p.objectivesStolen, p.objectivesStolenAssists, p.pentaKills, 
@@ -299,8 +299,29 @@ async function test(name) {
   const matchIdList = await getMatchHistory(name);
   // Pull Data For Each game Then Push it To DB if doesnt already exist
   const temp = await getMatchData(matchIdList[0]);
-  console.log(temp);
+  console.log(temp.info.participants[0].championName);
 }
 
+// GET STATS BY 
+async function getChampKDA(name, champName) {
+  const totalRecors = (await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['COUNT(*)'];
+  const avgKills = (await queryDB('SELECT AVG(kills) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(kills)'];
+  const avgAssists = (await queryDB('SELECT AVG(assists) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(assists)'];
+  const avgDeaths = (await queryDB('SELECT AVG(deaths) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(deaths)'];
+  if (avgDeaths === 0) {
+    console.log('RIP');
+  }
+  else {
+    const kda = (avgKills + avgAssists) / avgDeaths;
+    console.log(kda);
+  }
+  
+  //for (let i = 0; i < games.length; i++) {
+
+  //}
+}
+
+//pushRankedGames('Jungle Weeb');
 //test('Jungle Weeb');
 //grabAllRankedGames();
+getChampKDA('Jungle Weeb', 'Gwen');
