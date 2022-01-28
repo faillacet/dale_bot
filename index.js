@@ -10,21 +10,10 @@ const randomTrantMsg = require('./randomTrantMsg.js');
 const commandList = require('./commandList.js');
 const DBConnector = require('./DBConnector.js')
 
-// CRON JOBS, MOVE TO DIFF FILE SOON
-// Global Updaters
-const cron = require('cron');
-let statUpdater = new cron.CronJob('00 00 * * * *', () => {
-    console.log("UPDATED DB AT: " + Date.now());
-    DBConnector.updateAllSummoners();
-});
-let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
-    console.log("GRABBING MATCH HISTORY AT: " + Date.now());
-    DBConnector.grabAllRankedGames();
-});
-statUpdater.start();
-gameGrabber.start();
-
-// BETTING FUNCTIONALITY
+// CRON JOBS
+const cron = require('./CronJobs.js');
+cron.statUpdater.start();
+cron.gameGrabber.start();
 
 // Global Settings
 let LBDISPLAYCOUNT = 10;
@@ -188,7 +177,7 @@ async function betOnSummoner(msg, cmd) {
 
     // Check If User Is in DB, if NOT Create A Profile
     if (!(await DBConnector.userExists(msg.author.id))) {
-        await DBConnector.createNewUser(msg.author.id);
+        await DBConnector.createNewUser(msg.author.id, msg.author.username);
     }
 
     let inGame = await DBConnector.isInGame(name);
@@ -210,12 +199,12 @@ async function betOnSummoner(msg, cmd) {
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (win) {
             await DBConnector.addPoints(msg.author.id);
-            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send("<@" + msg.author.id + ">");
             msg.channel.send(boxFormat(name +" won the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
         else {
             await DBConnector.subtractPoints(msg.author.id);
-            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send("<@" + msg.author.id + ">");
             msg.channel.send(boxFormat(name+ " lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
 
@@ -242,7 +231,7 @@ async function betAgainstSummoner(msg, cmd) {
 
     // Check If User Is in DB, if NOT Create A Profile
     if (!(await DBConnector.userExists(msg.author.id))) {
-        await DBConnector.createNewUser(msg.author.id);
+        await DBConnector.createNewUser(msg.author.id, msg.author.username);
     }
 
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
@@ -265,12 +254,12 @@ async function betAgainstSummoner(msg, cmd) {
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (!win) {
             await DBConnector.addPoints(msg.author.id);
-            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send("<@" + msg.author.id + ">");
             msg.channel.send(boxFormat(name +" lost the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
         else {
             await DBConnector.subtractPoints(msg.author.id);
-            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send("<@" + msg.author.id + ">");
             msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
 

@@ -362,16 +362,12 @@ async function subtractPoints(discId) {
 
 async function getPoints(discId) {
   try {
-    return (await queryDB('SELECT points FROM user WHERE userID = ?', discId));
+    return (await queryDB('SELECT points FROM user WHERE userID = ?', discId))[0].points;
   }
   catch (e) {
     console.log(e);
   }
 }
-
-
-
-
 
 module.exports = {
   getStats, 
