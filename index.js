@@ -222,6 +222,8 @@ async function betOnSummoner(msg, cmd) {
 }
 
 async function betAgainstSummoner(msg, cmd) {
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+    
     // Check If User is already Betting On this summoner
     for (let i = 0; i < currentlyBetting.length; i++) {
         if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
@@ -235,7 +237,6 @@ async function betAgainstSummoner(msg, cmd) {
         await DBConnector.createNewUser(msg.author.id, msg.author.username);
     }
 
-    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     let inGame = await DBConnector.isInGame(name);
     if (inGame.gameID != 0) {
         currentlyBetting.push({better: msg.author.id, summoner: name});
