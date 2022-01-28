@@ -294,7 +294,6 @@ async function grabAllRankedGames() {
 async function isInGame(name) {
   try {
     let sumObj = await LeagueAPI.getSummonerByName(name);
-    console.log(sumObj.id);
     let activeGame = await LeagueAPI.getActiveGames(sumObj);
     return {gameID: activeGame.gameID, sumId: sumObj.id};
   }

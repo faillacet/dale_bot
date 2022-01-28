@@ -173,11 +173,10 @@ async function updateSummoners(msg) {
     }
 }
 
-// TODO
 async function betOnSummoner(msg, cmd) {
     // Check If User Is in DB, if NOT Create A Profile
-    if (!DBConnector.userExists(msg.author.id)) {
-        DBConnector.createNewUser(msg.author.id);
+    if (!(await DBConnector.userExists(msg.author.id))) {
+        await DBConnector.createNewUser(msg.author.id);
     }
 
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
