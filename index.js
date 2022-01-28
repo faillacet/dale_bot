@@ -164,7 +164,7 @@ async function updateSummoners(msg) {
 
 let currentlyBetting = [];
 
-async function betOnSummoner(msg, cmd) {
+async function betOnSummoner(msg, cmd, against) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
 
     // Check If User is already Betting On this summoner
@@ -180,101 +180,63 @@ async function betOnSummoner(msg, cmd) {
         await DBConnector.createNewUser(msg.author.id, msg.author.username);
     }
 
+    // Check If summoner is in a game
     let inGame = await DBConnector.isInGame(name);
-    if (inGame.gameID != 0) {
-        currentlyBetting.push({better: msg.author.id, summoner: name});
-        msg.channel.send(boxFormat('100 Points Successfully bet on ' + name));
-        let count = 0;
-        let time = 60000;
-        while ((await DBConnector.isInGame(name)).gameID != 0) {
-            // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
-            await new Promise(resolve => setTimeout(resolve, time));
-            count++;
-            if (count == 25) {
-                time = 30000;
-            }
-        }
-        
-        // TEST THIS, may not show up on API Immediatly in some cases
-        await new Promise(resolve => setTimeout(resolve, 30000));
-        let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
-        if (win) {
-            await DBConnector.addPoints(msg.author.id);
-            msg.channel.send("<@" + msg.author.id + ">");
-            msg.channel.send(boxFormat(name +" won the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-        }
-        else {
-            await DBConnector.subtractPoints(msg.author.id);
-            msg.channel.send("<@" + msg.author.id + ">");
-            msg.channel.send(boxFormat(name+ " lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-        }
+    if (inGame.gameID === 0) {
+        msg.channel.send(boxFormat('Summoner is not currently in a game'));
+        return;
+    }
 
-        for (let i = 0; i < currentlyBetting.length; i++) {
-            if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
-                currentlyBetting.splice(i, i+1);
-                return;
-            }
-        }
+    // Check to make sure game is in first 10 minutes
+    if ((Date.now() - inGame.gameStartTime) > 600000) {
+        msg.channel.send(boxFormat('Game started over 10 mins ago\nNo longer accepting bets on this match'));
+    }
+
+    currentlyBetting.push({better: msg.author.id, summoner: name});
+    if (against) {
+        msg.channel.send(boxFormat('100 points bet AGAINST ' + name));
     }
     else {
-        msg.channel.send(boxFormat('Summoner is not currently in a game'));
+        msg.channel.send(boxFormat('100 points bet ON ' + name));
     }
-}
 
-async function betAgainstSummoner(msg, cmd) {
-    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+    let time = 30000;
+    await new Promise(resolve => setTimeout(resolve, 300000));  // wait 5mins
+    while ((await DBConnector.isInGame(name)).gameID != 0) {
+        // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
+        await new Promise(resolve => setTimeout(resolve, time));
+    }
     
-    // Check If User is already Betting On this summoner
+    // TEST THIS, may not show up on API Immediatly in some cases
+    await new Promise(resolve => setTimeout(resolve, 15000));
+    let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
+    if (win && against)  {
+        await DBConnector.subtractPoints(msg.author.id);
+        msg.channel.send("<@" + msg.author.id + ">");
+        msg.channel.send(boxFormat("You bet AGAINST " + name + "\n" + name +" WON the game.\nYou LOST 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+    }
+    else if (win && !against) {
+        await DBConnector.addPoints(msg.author.id);
+        msg.channel.send("<@" + msg.author.id + ">");
+        msg.channel.send(boxFormat("You bet ON " + name + "\n" + name + " WON the game.\nYou WON 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+    }
+    else if (!win && against) {
+        await DBConnector.addPoints(msg.author.id);
+        msg.channel.send("<@" + msg.author.id + ">");
+        msg.channel.send(boxFormat("You bet AGINST " + name + "\n" + name + " LOST the game.\nYou WON 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+    }
+    else if (!win && !against) {
+        await DBConnector.subtractPoints(msg.author.id);
+        msg.channel.send("<@" + msg.author.id + ">");
+        msg.channel.send(boxFormat("You bet ON " + name + "\n" + name + " LOST the game.\nYou LOST 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+    }
+    
+    // Remove from Blocker
     for (let i = 0; i < currentlyBetting.length; i++) {
         if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
-            msg.channel.send('You are already betting on this user...');
+            currentlyBetting.splice(i, i+1);
             return;
         }
-    }
-
-    // Check If User Is in DB, if NOT Create A Profile
-    if (!(await DBConnector.userExists(msg.author.id))) {
-        await DBConnector.createNewUser(msg.author.id, msg.author.username);
-    }
-
-    let inGame = await DBConnector.isInGame(name);
-    if (inGame.gameID != 0) {
-        currentlyBetting.push({better: msg.author.id, summoner: name});
-        msg.channel.send(boxFormat('100 Points Successfully bet against ' + name));
-        let count = 0;
-        let time = 60000;
-        while ((await DBConnector.isInGame(name)).gameID != 0) {
-            // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
-            await new Promise(resolve => setTimeout(resolve, time));
-            count++;
-            if (count == 25) {
-                time = 30000;
-            }
-        }
-        
-        // TEST THIS, may not show up on API Immediatly in some cases
-        await new Promise(resolve => setTimeout(resolve, 30000));
-        let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
-        if (!win) {
-            await DBConnector.addPoints(msg.author.id);
-            msg.channel.send("<@" + msg.author.id + ">");
-            msg.channel.send(boxFormat(name +" lost the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-        }
-        else {
-            await DBConnector.subtractPoints(msg.author.id);
-            msg.channel.send("<@" + msg.author.id + ">");
-            msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-        }
-
-        for (let i = 0; i < currentlyBetting.length; i++) {
-            if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
-                currentlyBetting.splice(i, i+1);
-                return;
-            }
-        }
-    }
-    else {
-        msg.channel.send(boxFormat('Summoner is not currently in a game'));
     }
 }
 
@@ -361,10 +323,10 @@ bot.on('message', msg => {
             setLBDisplayCount(msg, "!setDisplayCount");
         }
         else if (msg.content.includes('!betOn')) {
-            betOnSummoner(msg, '!betOn');
+            betOnSummoner(msg, '!betOn', false);
         }
         else if (msg.content.includes('!betAgainst')) {
-            betAgainstSummoner(msg, '!betAgainst');
+            betOnSummoner(msg, '!betAgainst', true);
         }
     } 
 });

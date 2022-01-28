@@ -295,10 +295,10 @@ async function isInGame(name) {
   try {
     let sumObj = await LeagueAPI.getSummonerByName(name);
     let activeGame = await LeagueAPI.getActiveGames(sumObj);
-    return {gameID: activeGame.gameID, sumId: sumObj.id};
+    return {gameID: activeGame.gameID, sumId: sumObj.id, gameStartTime: activeGame.gameStartTime};
   }
   catch (e) {
-    return {gameID: 0, sumId: 0};
+    return {gameID: 0, sumId: 0, gameStartTime: 0};
   }
 }
 
@@ -314,7 +314,9 @@ async function gameIsWin(matchId, summonerId) {
     return false;
   }
   catch (e) {
-    console.log(e);
+    // wait 15 then try again
+    await new Promise(resolve => setTimeout(resolve, 15000));
+    return gameIsWin(matchId, summonerId);
   }
 }
 
