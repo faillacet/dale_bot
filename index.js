@@ -278,11 +278,11 @@ async function betAgainstSummoner(msg, cmd) {
 async function printBettingLeaderboard(msg) {
     try {
         let sortedPlayers = await DBConnector.getBettingLeaderboard(LBDISPLAYCOUNT);
-        let output = "TOP BETTERS"
+        console.log (sortedPlayers);
+        let output = "TOP BETTERS\n"
         for (let i = 0; i < sortedPlayers.length; i++) {
             output += (i + 1) + '- ' + sortedPlayers[i].name + 
-            ': ' + sortedPlayers[counter].points + ' Points\n';
-            counter++;
+            ': ' + sortedPlayers[i].points + ' Points\n';
         }
         msg.channel.send(boxFormat(output));
     }
