@@ -176,9 +176,11 @@ async function updateSummoners(msg) {
 let currentlyBetting = [];
 
 async function betOnSummoner(msg, cmd) {
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+
     // Check If User is already Betting On this summoner
     for (let i = 0; i < currentlyBetting.length; i++) {
-        if (currentlyBetting[i] === msg.author.id) {
+        if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
             msg.channel.send('You are already betting on this user...');
             return;
         }
@@ -189,10 +191,9 @@ async function betOnSummoner(msg, cmd) {
         await DBConnector.createNewUser(msg.author.id);
     }
 
-    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     let inGame = await DBConnector.isInGame(name);
     if (inGame.gameID != 0) {
-        currentlyBetting.push(msg.author.id);
+        currentlyBetting.push({better: msg.author.id, summoner: name});
         msg.channel.send(boxFormat('100 Points Successfully bet on ' + name));
         let count = 0;
         let time = 60000;
@@ -219,7 +220,7 @@ async function betOnSummoner(msg, cmd) {
         }
 
         for (let i = 0; i < currentlyBetting.length; i++) {
-            if (currentlyBetting[i] === msg.author.id) {
+            if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
                 currentlyBetting.splice(i, i+1);
                 return;
             }
@@ -233,7 +234,7 @@ async function betOnSummoner(msg, cmd) {
 async function betAgainstSummoner(msg, cmd) {
     // Check If User is already Betting On this summoner
     for (let i = 0; i < currentlyBetting.length; i++) {
-        if (currentlyBetting[i] === msg.author.id) {
+        if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
             msg.channel.send('You are already betting on this user...');
             return;
         }
@@ -247,7 +248,7 @@ async function betAgainstSummoner(msg, cmd) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     let inGame = await DBConnector.isInGame(name);
     if (inGame.gameID != 0) {
-        currentlyBetting.push(msg.author.id);
+        currentlyBetting.push({better: msg.author.id, summoner: name});
         msg.channel.send(boxFormat('100 Points Successfully bet against ' + name));
         let count = 0;
         let time = 60000;
@@ -272,9 +273,9 @@ async function betAgainstSummoner(msg, cmd) {
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
-        
+
         for (let i = 0; i < currentlyBetting.length; i++) {
-            if (currentlyBetting[i] === msg.author.id) {
+            if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
                 currentlyBetting.splice(i, i+1);
                 return;
             }
