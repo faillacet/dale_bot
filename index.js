@@ -10,13 +10,21 @@ const randomTrantMsg = require('./randomTrantMsg.js');
 const commandList = require('./commandList.js');
 const DBConnector = require('./DBConnector.js')
 
-// Legu Updater
+// CRON JOBS, MOVE TO DIFF FILE SOON
+// Global Updaters
 const cron = require('cron');
 let statUpdater = new cron.CronJob('00 00 * * * *', () => {
     console.log("UPDATED DB AT: " + Date.now());
     DBConnector.updateAllSummoners();
 });
+let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
+    console.log("GRABBING MATCH HISTORY AT: " + Date.now());
+    DBConnector.grabAllRankedGames();
+});
 statUpdater.start();
+gameGrabber.start();
+
+// BETTING FUNCTIONALITY
 
 // Global Settings
 let LBDISPLAYCOUNT = 10;
@@ -165,6 +173,50 @@ async function updateSummoners(msg) {
     }
 }
 
+// TODO
+async function betOnSummoner(msg, cmd) {
+    // Check If User Is in DB, if NOT Create A Profile
+    if (!DBConnector.userExists(msg.author.id)) {
+        DBConnector.createNewUser(msg.author.id);
+    }
+
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+    let inGame = await DBConnector.isInGame(name);
+    if (inGame.gameID != 0) {
+        msg.channel.send(boxFormat('100 Points Successfully bet on ' + name));
+        let count = 0;
+        let time = 60000;
+        while ((await DBConnector.isInGame(name)).gameID != 0) {
+            // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
+            await new Promise(resolve => setTimeout(resolve, time));
+            count++;
+            if (count == 25) {
+                time = 30000;
+            }
+        }
+        
+        // TEST THIS, may not show up on API Immediatly in some cases
+        let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
+        if (win) {
+            DBConnector.addPoints(msg.author.id);
+            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send(boxFormat(name +" won the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+        }
+        else {
+            DBConnector.subtractPoints(msg.author.id);
+            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send(boxFormat(name+ "lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+        }
+    }
+    else {
+        msg.channel.send(boxFormat('Summoner is not currently in a game'));
+    }
+}
+
+async function betAgainstSummoner(msg, cmd) {
+
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -214,6 +266,12 @@ bot.on('message', msg => {
         }
         else if (msg.content.includes("!setDisplayCount")) {
             setLBDisplayCount(msg, "!setDisplayCount");
+        }
+        else if (msg.content.includes('!betOn')) {
+            betOnSummoner(msg, '!betOn');
+        }
+        else if (msg.content.includes('!betAgainst')) {
+            betAgainstSummoner(msg, '!betOn');
         }
     } 
 });

@@ -221,10 +221,6 @@ async function updateAllSummoners() {
   }
 }
 
-module.exports = {
-  getStats, getRankLeaderboard, getWRLeaderboard, deleteSummoner, updateAllSummoners
-};
-
 // Non-Exported Functions (Backend stuff) ----------------------------------------------
 async function getMatchHistory(name) {
   const sumList = await queryDB('SELECT * FROM summoner WHERE name = ?', name);
@@ -277,7 +273,7 @@ async function pushRankedGames(name) {
   return counter;
 }
 
-// Lets Play w/ the Stats
+// Grabs games, then pushes to DB
 async function grabAllRankedGames() {
   try {
     let allSummoners = await queryDB('SELECT name FROM summoner');
@@ -294,6 +290,106 @@ async function grabAllRankedGames() {
   }
   
 }
+
+async function isInGame(name) {
+  try {
+    let sumObj = await LeagueAPI.getSummonerByName(name);
+    console.log(sumObj.id);
+    let activeGame = await LeagueAPI.getActiveGames(sumObj);
+    return {gameID: activeGame.gameID, sumId: sumObj.id};
+  }
+  catch (e) {
+    return {gameID: 0, sumId: 0};
+  }
+}
+
+async function gameIsWin(matchId, summonerId) {
+  try {
+    let id = "NA1_" + matchId;
+    let match = await LeagueAPI.getMatch(id);
+    for (let i = 0; i < match.info.participants.length; i++) {
+      if (match.info.participants[i].summonerId === summonerId) {
+        return match.info.participants[i].win;
+      }
+    }
+    return false;
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function userExists(discId) {
+  try {
+    let result = await queryDB('SELECT COUNT(*) FROM user WHERE userID = ?', discId);
+    if (result[0]['COUNT(*)'] > 0) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function createNewUser(discId, discName) {
+  try {
+    await queryDB('INSERT INTO user VALUES(?, ?, ?, ?, ?, ?)', [discId, discName, 0, 0, 0, 0]);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function addPoints(discId) {
+  try {
+    await queryDB('UPDATE user SET points = points + 100 WHERE userID = ?', discId);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function subtractPoints(discId) {
+  try {
+    await queryDB('UPDATE user SET points = points - 100 WHERE userID = ?', discId);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function getPoints(discId) {
+  try {
+    return (await queryDB('SELECT points FROM user WHERE userID = ?', discId));
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+
+
+
+
+module.exports = {
+  getStats, 
+  getRankLeaderboard, 
+  getWRLeaderboard, 
+  deleteSummoner, 
+  updateAllSummoners, 
+  grabAllRankedGames, 
+  isInGame, 
+  gameIsWin, 
+  userExists, 
+  createNewUser,
+  addPoints,
+  subtractPoints,
+  getPoints
+};
+
 
 async function test(name) {
   const matchIdList = await getMatchHistory(name);
@@ -320,8 +416,3 @@ async function getChampKDA(name, champName) {
 
   //}
 }
-
-//pushRankedGames('Jungle Weeb');
-//test('Jungle Weeb');
-//grabAllRankedGames();
-getChampKDA('Jungle Weeb', 'Gwen');
