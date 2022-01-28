@@ -173,7 +173,17 @@ async function updateSummoners(msg) {
     }
 }
 
+let currentlyBetting = [];
+
 async function betOnSummoner(msg, cmd) {
+    // Check If User is already Betting On this summoner
+    for (let i = 0; i < currentlyBetting.length; i++) {
+        if (currentlyBetting[i] === msg.author.id) {
+            msg.channel.send('You are already betting on this user...');
+            return;
+        }
+    }
+
     // Check If User Is in DB, if NOT Create A Profile
     if (!(await DBConnector.userExists(msg.author.id))) {
         await DBConnector.createNewUser(msg.author.id);
@@ -182,6 +192,7 @@ async function betOnSummoner(msg, cmd) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     let inGame = await DBConnector.isInGame(name);
     if (inGame.gameID != 0) {
+        currentlyBetting.push(msg.author.id);
         msg.channel.send(boxFormat('100 Points Successfully bet on ' + name));
         let count = 0;
         let time = 60000;
@@ -206,6 +217,13 @@ async function betOnSummoner(msg, cmd) {
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name+ " lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
+
+        for (let i = 0; i < currentlyBetting.length; i++) {
+            if (currentlyBetting[i] === msg.author.id) {
+                currentlyBetting.splice(i, i+1);
+                return;
+            }
+        }
     }
     else {
         msg.channel.send(boxFormat('Summoner is not currently in a game'));
@@ -213,6 +231,14 @@ async function betOnSummoner(msg, cmd) {
 }
 
 async function betAgainstSummoner(msg, cmd) {
+    // Check If User is already Betting On this summoner
+    for (let i = 0; i < currentlyBetting.length; i++) {
+        if (currentlyBetting[i] === msg.author.id) {
+            msg.channel.send('You are already betting on this user...');
+            return;
+        }
+    }
+
     // Check If User Is in DB, if NOT Create A Profile
     if (!(await DBConnector.userExists(msg.author.id))) {
         await DBConnector.createNewUser(msg.author.id);
@@ -221,6 +247,7 @@ async function betAgainstSummoner(msg, cmd) {
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
     let inGame = await DBConnector.isInGame(name);
     if (inGame.gameID != 0) {
+        currentlyBetting.push(msg.author.id);
         msg.channel.send(boxFormat('100 Points Successfully bet against ' + name));
         let count = 0;
         let time = 60000;
@@ -244,6 +271,13 @@ async function betAgainstSummoner(msg, cmd) {
             await DBConnector.subtractPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+        }
+        
+        for (let i = 0; i < currentlyBetting.length; i++) {
+            if (currentlyBetting[i] === msg.author.id) {
+                currentlyBetting.splice(i, i+1);
+                return;
+            }
         }
     }
     else {
