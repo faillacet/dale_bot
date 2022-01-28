@@ -190,6 +190,7 @@ async function betOnSummoner(msg, cmd, against) {
     // Check to make sure game is in first 10 minutes
     if ((Date.now() - inGame.gameStartTime) > 600000) {
         msg.channel.send(boxFormat('Game started over 10 mins ago\nNo longer accepting bets on this match'));
+        return;
     }
 
     currentlyBetting.push({better: msg.author.id, summoner: name});
