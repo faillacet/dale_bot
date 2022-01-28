@@ -292,6 +292,18 @@ async function printBettingLeaderboard(msg) {
     }
 }
 
+async function checkForActiveGames(msg) {
+    let sumList = await DBConnector.getAllStoredSummoners();
+    for (let i = 0; i < sumList.length; i++) {
+        // 10 Second Wait
+        await new Promise(resolve => setTimeout(resolve, 10000));
+
+        if ((await DBConnector.isInGame(sumList[i].name)).gameID != 0) {
+            msg.channel.send(boxFormat("SUMMONER: " + sumList[i].name + " IS NOW IN GAME"))
+        }
+    }
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);

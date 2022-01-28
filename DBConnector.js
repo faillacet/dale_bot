@@ -373,6 +373,11 @@ async function getPoints(discId) {
 async function getBettingLeaderboard(count) {
   return await queryDB('SELECT * FROM user ORDER BY points DESC LIMIT ?', count);
 }
+
+async function getAllStoredSummoners() {
+  return await queryDB('SELECT name FROM summoner');
+}
+
 module.exports = {
   getStats, 
   getRankLeaderboard, 
@@ -387,7 +392,8 @@ module.exports = {
   addPoints,
   subtractPoints,
   getPoints,
-  getBettingLeaderboard
+  getBettingLeaderboard,
+  getAllStoredSummoners
 };
 
 
