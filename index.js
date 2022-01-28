@@ -279,10 +279,9 @@ async function printBettingLeaderboard(msg) {
     try {
         let sortedPlayers = await DBConnector.getBettingLeaderboard(LBDISPLAYCOUNT);
         let output = "TOP BETTERS"
-        let counter = 0;
         for (let i = 0; i < sortedPlayers.length; i++) {
-            output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
-            ': ' + sortedPlayers[counter].winrate + '%\n';
+            output += (i + 1) + '- ' + sortedPlayers[i].name + 
+            ': ' + sortedPlayers[counter].points + ' Points\n';
             counter++;
         }
         msg.channel.send(boxFormat(output));
