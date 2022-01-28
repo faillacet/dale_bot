@@ -285,7 +285,6 @@ async function grabAllRankedGames() {
     }
   }
   catch (e) {
-    console.log("DIDNT WORK");
     console.log(e);
   }
   

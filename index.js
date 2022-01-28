@@ -196,6 +196,7 @@ async function betOnSummoner(msg, cmd) {
         }
         
         // TEST THIS, may not show up on API Immediatly in some cases
+        await new Promise(resolve => setTimeout(resolve, 30000));
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (win) {
             await DBConnector.addPoints(msg.author.id);
@@ -251,6 +252,7 @@ async function betAgainstSummoner(msg, cmd) {
         }
         
         // TEST THIS, may not show up on API Immediatly in some cases
+        await new Promise(resolve => setTimeout(resolve, 30000));
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (!win) {
             await DBConnector.addPoints(msg.author.id);
