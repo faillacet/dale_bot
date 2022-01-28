@@ -197,12 +197,12 @@ async function betOnSummoner(msg, cmd) {
         // TEST THIS, may not show up on API Immediatly in some cases
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (win) {
-            DBConnector.addPoints(msg.author.id);
+            await DBConnector.addPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name +" won the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
         else {
-            DBConnector.subtractPoints(msg.author.id);
+            await DBConnector.subtractPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name+ " lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
@@ -214,8 +214,8 @@ async function betOnSummoner(msg, cmd) {
 
 async function betAgainstSummoner(msg, cmd) {
     // Check If User Is in DB, if NOT Create A Profile
-    if (!DBConnector.userExists(msg.author.id)) {
-        DBConnector.createNewUser(msg.author.id);
+    if (!(await DBConnector.userExists(msg.author.id))) {
+        await DBConnector.createNewUser(msg.author.id);
     }
 
     let name = msg.toString().substr(cmd.length + 1, msg.content.length);
@@ -236,12 +236,12 @@ async function betAgainstSummoner(msg, cmd) {
         // TEST THIS, may not show up on API Immediatly in some cases
         let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
         if (!win) {
-            DBConnector.addPoints(msg.author.id);
+            await DBConnector.addPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name +" lost the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
         else {
-            DBConnector.subtractPoints(msg.author.id);
+            await DBConnector.subtractPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
             msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
