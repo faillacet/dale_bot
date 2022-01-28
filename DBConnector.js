@@ -315,10 +315,16 @@ async function gameIsWin(matchId, summonerId) {
   }
   catch (e) {
     // wait 15 then try again
-    await new Promise(resolve => setTimeout(resolve, 15000));
-    return gameIsWin(matchId, summonerId);
+    if (e.status.status_code === 404) {
+      // Match Not Found so repeat
+      await new Promise(resolve => setTimeout(resolve, 15000));
+      return gameIsWin(matchId, summonerId);
+    }
+    // This should never happen
+    return false;
   }
 }
+
 
 async function userExists(discId) {
   try {

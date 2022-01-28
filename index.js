@@ -243,7 +243,6 @@ async function betOnSummoner(msg, cmd, against) {
 async function printBettingLeaderboard(msg) {
     try {
         let sortedPlayers = await DBConnector.getBettingLeaderboard(LBDISPLAYCOUNT);
-        console.log (sortedPlayers);
         let output = "TOP BETTERS\n"
         for (let i = 0; i < sortedPlayers.length; i++) {
             output += (i + 1) + '- ' + sortedPlayers[i].name + 
