@@ -205,7 +205,7 @@ async function betOnSummoner(msg, cmd) {
         else {
             DBConnector.subtractPoints(msg.author.id);
             msg.channel.send(`${msg.author.username}`);
-            msg.channel.send(boxFormat(name+ "lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+            msg.channel.send(boxFormat(name+ " lost the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
         }
     }
     else {
@@ -214,7 +214,42 @@ async function betOnSummoner(msg, cmd) {
 }
 
 async function betAgainstSummoner(msg, cmd) {
+    // Check If User Is in DB, if NOT Create A Profile
+    if (!DBConnector.userExists(msg.author.id)) {
+        DBConnector.createNewUser(msg.author.id);
+    }
 
+    let name = msg.toString().substr(cmd.length + 1, msg.content.length);
+    let inGame = await DBConnector.isInGame(name);
+    if (inGame.gameID != 0) {
+        msg.channel.send(boxFormat('100 Points Successfully bet against ' + name));
+        let count = 0;
+        let time = 60000;
+        while ((await DBConnector.isInGame(name)).gameID != 0) {
+            // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
+            await new Promise(resolve => setTimeout(resolve, time));
+            count++;
+            if (count == 25) {
+                time = 30000;
+            }
+        }
+        
+        // TEST THIS, may not show up on API Immediatly in some cases
+        let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
+        if (!win) {
+            DBConnector.addPoints(msg.author.id);
+            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send(boxFormat(name +" lost the game.\nYOU WON 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+        }
+        else {
+            DBConnector.subtractPoints(msg.author.id);
+            msg.channel.send(`${msg.author.username}`);
+            msg.channel.send(boxFormat(name+ " won the game.\nYOU LOST 100 POINTS!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
+        }
+    }
+    else {
+        msg.channel.send(boxFormat('Summoner is not currently in a game'));
+    }
 }
 
 // Listen for "ready" Event
@@ -271,7 +306,7 @@ bot.on('message', msg => {
             betOnSummoner(msg, '!betOn');
         }
         else if (msg.content.includes('!betAgainst')) {
-            betAgainstSummoner(msg, '!betOn');
+            betAgainstSummoner(msg, '!betAgainst');
         }
     } 
 });
