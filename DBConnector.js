@@ -291,6 +291,7 @@ async function grabAllRankedGames() {
   
 }
 
+// Betting Functions
 async function isInGame(name) {
   try {
     let sumObj = await LeagueAPI.getSummonerByName(name);
@@ -369,6 +370,9 @@ async function getPoints(discId) {
   }
 }
 
+async function getBettingLeaderboard(count) {
+  return await queryDB('SELECT * FROM user ORDER BY points DESC LIMIT ?', count);
+}
 module.exports = {
   getStats, 
   getRankLeaderboard, 
@@ -382,7 +386,8 @@ module.exports = {
   createNewUser,
   addPoints,
   subtractPoints,
-  getPoints
+  getPoints,
+  getBettingLeaderboard
 };
 
 

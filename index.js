@@ -275,6 +275,24 @@ async function betAgainstSummoner(msg, cmd) {
     }
 }
 
+async function printBettingLeaderboard(msg) {
+    try {
+        let sortedPlayers = await DBConnector.getBettingLeaderboard(LBDISPLAYCOUNT);
+        let output = "TOP BETTERS"
+        let counter = 0;
+        for (let i = 0; i < sortedPlayers.length; i++) {
+            output += (counter + 1) + '- ' + sortedPlayers[counter].name + 
+            ': ' + sortedPlayers[counter].winrate + '%\n';
+            counter++;
+        }
+        msg.channel.send(boxFormat(output));
+    }
+    catch (e) {
+        msg.channel.send("Error, check logs...");
+        console.log(e);
+    }
+}
+
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
@@ -315,6 +333,9 @@ bot.on('message', msg => {
         }
         else if (msg.content === "!winrateLeaderboard") {
             printWRLeaderboard(msg);
+        }
+        else if (msg.content === "!bettingLeaderboard") {
+            printBettingLeaderboard(msg);
         }
         else if (msg.content.includes("!stats")) {
             printSummonerStats(msg, "!stats");
