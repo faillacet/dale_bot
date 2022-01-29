@@ -266,28 +266,7 @@ async function betOnSummoner(msg, cmd, against) {
         await DBConnector.subtractPoints(loosers[i].better);
     }
 
-
-    // Legacy Code
-    if (win && against)  {
-        await DBConnector.subtractPoints(msg.author.id);
-        msg.channel.send("<@" + msg.author.id + ">");
-        msg.channel.send(boxFormat("You bet AGAINST " + name + "\n" + name +" WON the game.\nYou LOST 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-    }
-    else if (win && !against) {
-        await DBConnector.addPoints(msg.author.id);
-        msg.channel.send("<@" + msg.author.id + ">");
-        msg.channel.send(boxFormat("You bet ON " + name + "\n" + name + " WON the game.\nYou WON 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-    }
-    else if (!win && against) {
-        await DBConnector.addPoints(msg.author.id);
-        msg.channel.send("<@" + msg.author.id + ">");
-        msg.channel.send(boxFormat("You bet AGINST " + name + "\n" + name + " LOST the game.\nYou WON 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-    }
-    else if (!win && !against) {
-        await DBConnector.subtractPoints(msg.author.id);
-        msg.channel.send("<@" + msg.author.id + ">");
-        msg.channel.send(boxFormat("You bet ON " + name + "\n" + name + " LOST the game.\nYou LOST 100 points!\nYou now have a total of " + (await DBConnector.getPoints(msg.author.id)) + " points."));
-    }
+    msg.channel.send(boxFormat(userAlert));
     
     // Remove from Blocker
     for (let i = 0; i < currentlyBetting.length; i++) {

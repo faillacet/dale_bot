@@ -102,13 +102,13 @@ async function deleteSummoner(name) {
 async function updateAllSummoners() {
   try {
     let allSummoners = await queryDB('SELECT * FROM summoner');
-    let qry = `UPDATE summoner SET sumId = ?, accountId = ?, puuid = ?, name = ?, profileIconId = ?, 
+    let qry = `UPDATE summoner SET sumId = ?, accountId = ?, name = ?, profileIconId = ?, 
     summonerLevel = ?, tier = ?, sumRank = ?, leaguePoints = ?, wins = ?, losses = ?, winrate = ?, 
-    lastUpdated = ?, rankIndex = ? WHERE name = ?`;
+    lastUpdated = ?, rankIndex = ? WHERE puuid = ?`;
     for (let i = 0; i < allSummoners.length; i++) {
       let temp = await getSummonerFromAPI(allSummoners[i].name);
-      let inputs = [temp.sumId, temp.accountId, temp.puuid, temp.name, temp.profileIconId, temp.summonerLevel, temp.tier, temp.sumRank, 
-      temp.leaguePoints, temp.wins, temp.losses, temp.winrate, temp.lastUpdated, temp.rankIndex, temp.name];
+      let inputs = [temp.sumId, temp.accountId, temp.name, temp.profileIconId, temp.summonerLevel, temp.tier, temp.sumRank, 
+      temp.leaguePoints, temp.wins, temp.losses, temp.winrate, temp.lastUpdated, temp.rankIndex, temp.puuid];
       await queryDB(qry, inputs);
     }
   }
