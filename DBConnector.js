@@ -189,19 +189,19 @@ async function isInGame(name) {
   try {
     let sumObj = await LeagueAPI.getSummonerByName(name);
     let activeGame = await LeagueAPI.getActiveGames(sumObj);
-    return {gameID: activeGame.gameID, sumId: sumObj.id, gameStartTime: activeGame.gameStartTime};
+    return {gameID: activeGame.gameId, sumId: sumObj.puuid, gameStartTime: activeGame.gameStartTime};
   }
   catch (e) {
     return {gameID: 0, sumId: 0, gameStartTime: 0};
   }
 }
 
-async function gameIsWin(matchId, summonerId) {
+async function gameIsWin(matchId, sumPuuid) {
   try {
     let id = "NA1_" + matchId;
     let match = await LeagueAPI.getMatch(id);
     for (let i = 0; i < match.info.participants.length; i++) {
-      if (match.info.participants[i].summonerId === summonerId) {
+      if (match.info.participants[i].puuid === sumPuuid) {
         return match.info.participants[i].win;
       }
     }
@@ -218,7 +218,6 @@ async function gameIsWin(matchId, summonerId) {
     return false;
   }
 }
-
 
 async function userExists(discId) {
   try {
