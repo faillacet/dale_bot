@@ -299,7 +299,7 @@ async function printUsersPoints(msg) {
         if (!(await DBConnector.userExists(msg.author.id))) {
             await DBConnector.createNewUser(msg.author.id, msg.author.username);
         }
-        
+
         let points = await DBConnector.getPoints(msg.author.id);
         msg.channel.send(boxFormat("You currently have " + points  + " points."))
     }
@@ -310,15 +310,30 @@ async function printUsersPoints(msg) {
 }
 
 async function checkForActiveGames(msg) {
+    let hit = [];
     let sumList = await DBConnector.getAllStoredSummoners();
     for (let i = 0; i < sumList.length; i++) {
-        // 10 Second Wait
-        await new Promise(resolve => setTimeout(resolve, 10000));
-
+        // 5 Second Wait
+        await new Promise(resolve => setTimeout(resolve, 5000));
         if ((await DBConnector.isInGame(sumList[i].name)).gameID != 0) {
-            msg.channel.send(boxFormat("SUMMONER: " + sumList[i].name + " IS NOW IN GAME"))
+            hit.push(sumList[i].name);
         }
     }
+    if (hit.length > 1) {
+        let botMessage = "SUMMONERS: \n"
+        for (let i = 0; i < hit.length; i++) {
+            botMessage += hit[i] + "\n";
+        }
+        botMessage += "ARE NOW IN GAME\nPLACE BETS NOW!";
+        msg.channel.send(boxFormat(botMessage));
+    }
+    else if (hit.length === 1) {
+        msg.channel.send(boxFormat("SUMMONER: " + hit[0] + " IS NOW IN GAME\nPLACE BETS NOW!"));
+    }
+}
+
+function plz(msg) {
+    console.log(msg.channel);
 }
 
 // Listen for "ready" Event
@@ -343,6 +358,7 @@ bot.on('message', msg => {
     if (msg.content[0] === '!') {
         if (msg.content === "!help") {
             printHelpScreen(msg);
+            plz(msg);
         }
         else if (msg.content === "!daleMsg") {                                                   
             msg.channel.send(getRandomDaleMsg());
