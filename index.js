@@ -18,6 +18,15 @@ cron.gameGrabber.start();
 // Global Settings
 let LBDISPLAYCOUNT = 10;
 let DELETEDALEMSG = false;
+let MAINCHANNEL;
+const MAINCHANNELID = '811340114986401864';
+
+// Listen for "ready" Event
+bot.on('ready', () => {
+    console.info(`Logged in as ${bot.user.tag}!`);
+    bot.user.setUsername("dodger dale");
+    MAINCHANNEL = bot.channels.cache.get(MAINCHANNELID);
+});
 
 // Helper function, move to module later
 function boxFormat(string) {
@@ -309,7 +318,7 @@ async function printUsersPoints(msg) {
     }
 }
 
-async function checkForActiveGames(msg) {
+async function checkForActiveGames(channel) {
     let hit = [];
     let sumList = await DBConnector.getAllStoredSummoners();
     for (let i = 0; i < sumList.length; i++) {
@@ -325,22 +334,60 @@ async function checkForActiveGames(msg) {
             botMessage += hit[i] + "\n";
         }
         botMessage += "ARE NOW IN GAME\nPLACE BETS NOW!";
-        msg.channel.send(boxFormat(botMessage));
+        channel.send(boxFormat(botMessage));
     }
     else if (hit.length === 1) {
-        msg.channel.send(boxFormat("SUMMONER: " + hit[0] + " IS NOW IN GAME\nPLACE BETS NOW!"));
+        channel.send(boxFormat("SUMMONER: " + hit[0] + " IS NOW IN GAME\nPLACE BETS NOW!"));
     }
 }
 
-function plz(msg) {
-    console.log(msg.channel);
+function handleCommands(msg) {
+    if (msg.content === "!help") {
+        printHelpScreen(msg);
+    }
+    else if (msg.content === "!daleMsg") {                                                   
+        msg.channel.send(getRandomDaleMsg());
+    }
+    else if (msg.content === "!trantMsg") {                                             
+        msg.channel.send(getRandomTrantMsg());
+    }
+    else if (msg.content === "!fuqDale") {
+        fuqDale(msg);
+    }
+    else if (msg.content === "!updateSummoners") {
+        updateSummoners(msg);
+    }
+    else if (msg.content === "!rankLeaderboard") {
+        printRankLeaderboard(msg);
+    }
+    else if (msg.content === "!winrateLeaderboard") {
+        printWRLeaderboard(msg);
+    }
+    else if (msg.content === "!bettingLeaderboard") {
+        printBettingLeaderboard(msg);
+    }
+    else if (msg.content === "!points") {
+        printUsersPoints(msg);
+    }
+    else if (msg.content === "!test") {
+        checkForActiveGames(MAINCHANNEL);
+    }
+    else if (msg.content.includes("!stats")) {
+        printSummonerStats(msg, "!stats");
+    }
+    else if (msg.content.includes("!deleteSummoner")) {
+        deleteSummoner(msg, "!deleteSummoner");
+    }
+    else if (msg.content.includes("!setDisplayCount")) {
+        setLBDisplayCount(msg, "!setDisplayCount");
+    }
+    else if (msg.content.includes('!betOn')) {
+        betOnSummoner(msg, '!betOn', false);
+    }
+    else if (msg.content.includes('!betAgainst')) {
+        betOnSummoner(msg, '!betAgainst', true);
+    }
 }
-
-// Listen for "ready" Event
-bot.on('ready', () => {
-    console.info(`Logged in as ${bot.user.tag}!`);
-    bot.user.setUsername("dodger dale");
-});
 
 // Listen for "message" Event
 // msg.reply: tags the initial user who sent the message
@@ -356,53 +403,6 @@ bot.on('message', msg => {
 
     // Check Each Msg to see if it is a possible command (so command search isnt done on every message)
     if (msg.content[0] === '!') {
-        if (msg.content === "!help") {
-            printHelpScreen(msg);
-            plz(msg);
-        }
-        else if (msg.content === "!daleMsg") {                                                   
-            msg.channel.send(getRandomDaleMsg());
-        }
-        else if (msg.content === "!trantMsg") {                                             
-            msg.channel.send(getRandomTrantMsg());
-        }
-        else if (msg.content === "!fuqDale") {
-            fuqDale(msg);
-        }
-        else if (msg.content === "!updateSummoners") {
-            updateSummoners(msg);
-        }
-        else if (msg.content === "!rankLeaderboard") {
-            printRankLeaderboard(msg);
-        }
-        else if (msg.content === "!winrateLeaderboard") {
-            printWRLeaderboard(msg);
-        }
-        else if (msg.content === "!bettingLeaderboard") {
-            printBettingLeaderboard(msg);
-        }
-        else if (msg.content === "!points") {
-            printUsersPoints(msg);
-        }
-        else if (msg.content.includes("!stats")) {
-            printSummonerStats(msg, "!stats");
-        }
-        else if (msg.content.includes("!deleteSummoner")) {
-            deleteSummoner(msg, "!deleteSummoner");
-        }
-        else if (msg.content.includes("!setDisplayCount")) {
-            setLBDisplayCount(msg, "!setDisplayCount");
-        }
-        else if (msg.content.includes('!betOn')) {
-            betOnSummoner(msg, '!betOn', false);
-        }
-        else if (msg.content.includes('!betAgainst')) {
-            betOnSummoner(msg, '!betAgainst', true);
-        }
+        handleCommands(msg);
     } 
 });
-
-/* TODO:
- - create a randomized event for dale-bot to post in chat "anyone want to go to wendy's?"
- - create spontaneous messages.
-*/

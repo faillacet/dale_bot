@@ -13,6 +13,9 @@ let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
     DBConnector.grabAllRankedGames();
 });
 
+// Runs every 5 minutes
+//let checkForGames = new cron.CronJob()
+
 module.exports = {
     statUpdater,
     gameGrabber
