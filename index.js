@@ -293,6 +293,17 @@ async function printBettingLeaderboard(msg) {
     }
 }
 
+async function printUsersPoints(msg) {
+    try {
+        let points = await DBConnector.getPoints(msg.author.id);
+        msg.channel.send(boxFormat("You currently have " + points  + " points."))
+    }
+    catch (e) {
+        msg.channel.send("Error, check logs...");
+        console.log(e);
+    }
+}
+
 async function checkForActiveGames(msg) {
     let sumList = await DBConnector.getAllStoredSummoners();
     for (let i = 0; i < sumList.length; i++) {
@@ -348,6 +359,9 @@ bot.on('message', msg => {
         }
         else if (msg.content === "!bettingLeaderboard") {
             printBettingLeaderboard(msg);
+        }
+        else if (msg.content === "!points") {
+            printUsersPoints(msg);
         }
         else if (msg.content.includes("!stats")) {
             printSummonerStats(msg, "!stats");
