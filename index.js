@@ -295,6 +295,11 @@ async function printBettingLeaderboard(msg) {
 
 async function printUsersPoints(msg) {
     try {
+        // Check to See if betting profile exists, if not create
+        if (!(await DBConnector.userExists(msg.author.id))) {
+            await DBConnector.createNewUser(msg.author.id, msg.author.username);
+        }
+        
         let points = await DBConnector.getPoints(msg.author.id);
         msg.channel.send(boxFormat("You currently have " + points  + " points."))
     }
