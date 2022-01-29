@@ -193,7 +193,8 @@ async function betOnSummoner(msg, cmd, against) {
         return;
     }
 
-    currentlyBetting.push({better: msg.author.id, summoner: name});
+    // Add To Currently Betting List and send confirmation
+    currentlyBetting.push({better: msg.author.id, summoner: name, isAgainst: against, betterName: msg.author.username});
     if (against) {
         msg.channel.send(boxFormat('100 points bet AGAINST ' + name));
     }
@@ -201,16 +202,72 @@ async function betOnSummoner(msg, cmd, against) {
         msg.channel.send(boxFormat('100 points bet ON ' + name));
     }
 
+    // If this function is already in use, can exit here so only one instance exists
+    for (let i = 0; i < currentlyBetting.length; i++) {
+        if (currentlyBetting[i].better != msg.author.id && currentlyBetting[i].summoner === name) {
+            return;
+        }
+    }
+
     let time = 30000;
     await new Promise(resolve => setTimeout(resolve, 300000));  // wait 5mins
     while ((await DBConnector.isInGame(name)).gameID != 0) {
-        // wait 1 minute (check every minute) - changes to 30 seconds after 25 minutes
+        // wait 1 minute (check every 30 seconds)
         await new Promise(resolve => setTimeout(resolve, time));
     }
     
     // TEST THIS, may not show up on API Immediatly in some cases
     await new Promise(resolve => setTimeout(resolve, 15000));
     let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
+
+    // Get all users betting on this (local) summoner
+    let localBetting = [];
+    for (let i = 0; i < currentlyBetting.length; i++) {
+        if (currentlyBetting[i].summoner === name) {
+            localBetting.push({better: currentlyBetting[i].better, isAgainst: currentlyBetting[i].isAgainst, betterName: currentlyBetting[i].betterName});
+        }
+    }
+
+    // Determine who won or lost the bet
+    let winners = [];
+    let loosers = [];
+    for (let i = 0; i < localBetting.length; i++) {
+        if (localBetting[i].isAgainst && win) {
+            loosers.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+        }
+        else if (localBetting[i].isAgainst && !win) {
+            winners.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+        }
+        else if (!localBetting[i].isAgainst && win) {
+            winners.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+        }
+        else {
+            loosers.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+        }
+    }
+
+    // Create msg alerting winners and loosers
+    let userAlert;
+    if (win) {
+        userAlert = name + " has WON the game.\n"; 
+    }
+    else {
+        userAlert = name + " has LOST the game.\n";
+    }
+
+    userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
+    for (let i = 0; i < winners.length; i++) {
+        userAlert += winners[i].betterName + "\n";
+        await DBConnector.addPoints(winners[i].better);
+    }
+    userAlert += "\nTHE FOLLOWING USERs HAVE LOST THE BET:\n";
+    for (let i = 0; i < loosers.length; i++) {
+        userAlert += loosers[i].betterName + "\n";
+        await DBConnector.subtractPoints(loosers[i].better);
+    }
+
+
+    // Legacy Code
     if (win && against)  {
         await DBConnector.subtractPoints(msg.author.id);
         msg.channel.send("<@" + msg.author.id + ">");
@@ -234,7 +291,7 @@ async function betOnSummoner(msg, cmd, against) {
     
     // Remove from Blocker
     for (let i = 0; i < currentlyBetting.length; i++) {
-        if (currentlyBetting[i].better === msg.author.id && currentlyBetting[i].summoner === name) {
+        if (currentlyBetting[i].summoner === name) {
             currentlyBetting.splice(i, i+1);
             return;
         }

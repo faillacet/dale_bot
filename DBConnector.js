@@ -100,124 +100,20 @@ async function deleteSummoner(name) {
 }
 
 async function updateAllSummoners() {
-  let allSummoners = await queryDB('SELECT * FROM summoner');
-  for (let i = 0; i < allSummoners.length; i++) {
-    let temp = await getSummonerFromAPI(allSummoners[i].name);
-    let qry = 'UPDATE summoner SET';
-    let inputs = [];
-    let duplicate = false;
-
-    // Check For Differences
-    if (temp.name != allSummoners[i].name) {
-      qry += ' name = ?'
-      duplicate = true;
-      inputs.push(temp.name);
+  try {
+    let allSummoners = await queryDB('SELECT * FROM summoner');
+    let qry = `UPDATE summoner SET sumId = ?, accountId = ?, puuid = ?, name = ?, profileIconId = ?, 
+    summonerLevel = ?, tier = ?, sumRank = ?, leaguePoints = ?, wins = ?, losses = ?, winrate = ?, 
+    lastUpdated = ?, rankIndex = ? WHERE name = ?`;
+    for (let i = 0; i < allSummoners.length; i++) {
+      let temp = await getSummonerFromAPI(allSummoners[i].name);
+      let inputs = [temp.sumId, temp.accountId, temp.puuid, temp.name, temp.profileIconId, temp.summonerLevel, temp.tier, temp.sumRank, 
+      temp.leaguePoints, temp.wins, temp.losses, temp.winrate, temp.lastUpdated, temp.rankIndex, temp.name];
+      await queryDB(qry, inputs);
     }
-    if (temp.profileIconId != allSummoners[i].profileIconId) {
-      if (duplicate) {
-        qry += ', profileIconId = ?';
-      }
-      else {
-        qry += ' profileIconId = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.profileIconId);
-    }
-    if (temp.summonerLevel != allSummoners[i].summonerLevel) {
-      if (duplicate) {
-        qry += ', summonerLevel = ?';
-      }
-      else {
-        qry += ' summonerLevel = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.summonerLevel);
-    }
-    if (temp.tier != allSummoners[i].tier) {
-      if (duplicate) {
-        qry += ', tier = ?';
-      }
-      else {
-        qry += ' tier = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.tier);
-    }
-    if (temp.sumRank != allSummoners[i].sumRank) {
-      if (duplicate) {
-        qry += ', sumRank = ?';
-      }
-      else {
-        qry += ' sumRank = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.sumRank);
-    }
-    if (temp.leaguePoints != allSummoners[i].leaguePoints) {
-      if (duplicate) {
-        qry += ', leaguePoints = ?';
-      }
-      else {
-        qry += ' leaguePoints = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.leaguePoints);
-    }
-    if (temp.wins != allSummoners[i].wins) {
-      if (duplicate) {
-        qry += ', wins = ?';
-      }
-      else {
-        qry += ' wins = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.wins);
-    }
-    if (temp.losses != allSummoners[i].losses) {
-      if (duplicate) {
-        qry += ', losses = ?';
-      }
-      else {
-        qry += ' losses = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.losses);
-    }
-    if (temp.winrate != allSummoners[i].winrate) {
-      if (duplicate) {
-        qry += ', winrate = ?';
-      }
-      else {
-        qry += ' winrate = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.winrate);
-    }
-    if (temp.lastUpdated != allSummoners[i].lastUpdated) {
-      if (duplicate) {
-        qry += ', lastUpdated = ?';
-      }
-      else {
-        qry += ' lastUpdated = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.lastUpdated);
-    }
-    if (temp.rankIndex != allSummoners[i].rankIndex) {
-      if (duplicate) {
-        qry += ', rankIndex = ?';
-      }
-      else {
-        qry += ' rankIndex = ?';
-      }
-      duplicate = true;
-      inputs.push(temp.rankIndex);
-    }
-    
-    // Push Changes To DB
-    qry += ' WHERE puuid = ?'
-    inputs.push(temp.puuid);
-    await queryDB(qry, inputs);
+  }
+  catch (e) {
+    conseole.log(e);
   }
 }
 
@@ -227,16 +123,14 @@ async function getMatchHistory(name) {
   // If not in DB, enter into db then repeat
   if (sumList.length < 1) {
     await insertSumIntoDB(name);
-    const sumList = await queryDB('SELECT * FROM summoner WHERE name = ?', name);
+    sumList = await queryDB('SELECT * FROM summoner WHERE name = ?', name);
   }
   // Get Last 20 Matches from Summoner
-  const matchList = await LeagueAPI.getMatchList(sumList[0].puuid);
-  return matchList;
+  return (await LeagueAPI.getMatchList(sumList[0].puuid));
 }
 
 async function getMatchData(matchId) {
-  const matchData = await LeagueAPI.getMatch(matchId);
-  return matchData;
+  return (await LeagueAPI.getMatch(matchId));
 }
 
 // OVERLOADS API LIMIT USE ONLY ON DOWN TIME
