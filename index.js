@@ -280,7 +280,7 @@ async function betOnSummoner(msg, cmd, against) {
     // Remove from Blocker
     for (let i = 0; i < currentlyBetting.length; i++) {
         if (currentlyBetting[i].summoner === name) {
-            currentlyBetting.splice(i, i+1);
+            currentlyBetting.splice(i, 1);
             return;
         }
     }
