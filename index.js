@@ -278,12 +278,16 @@ async function betOnSummoner(msg, cmd, against) {
     msg.channel.send(boxFormat(userAlert));
     
     // Remove from Blocker
-    for (let i = 0; i < currentlyBetting.length; i++) {
-        if (currentlyBetting[i].summoner === name) {
-            currentlyBetting.splice(i, 1);
-            return;
+    let index = 0;
+    while (index < currentlyBetting.length) {
+        if (currentlyBetting[index].summoner === name) {
+            currentlyBetting.splice(index, 1);
+        }
+        else {
+            ++i;
         }
     }
+    return;
 }
 
 async function printBettingLeaderboard(msg) {
