@@ -284,7 +284,7 @@ async function betOnSummoner(msg, cmd, against) {
             currentlyBetting.splice(index, 1);
         }
         else {
-            ++i;
+            ++index;
         }
     }
     return;
@@ -321,6 +321,8 @@ async function printUsersPoints(msg) {
         console.log(e);
     }
 }
+
+let activeGames = [];
 
 async function checkForActiveGames(channel) {
     let hit = [];

@@ -14,7 +14,9 @@ let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
 });
 
 // Runs every 5 minutes
-//let checkForGames = new cron.CronJob()
+// let checkForGames = new cron.CronJob('00 0/5 * * * *', () => {
+    
+// });
 
 module.exports = {
     statUpdater,
