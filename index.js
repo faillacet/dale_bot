@@ -15,7 +15,7 @@ const Betting = require("./DBOps/BettingHandler.js");
 const cron = require('./MiscClasses/CronJobs.js');
 
 // Global Settings
-const MAINCHANNELID = '811340114986401864';
+const MAINCHANNELID = '600446077769875467';
 let MAINCHANNEL;
 
 // Listen for "ready" Event
