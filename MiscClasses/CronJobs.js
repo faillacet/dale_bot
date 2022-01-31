@@ -1,5 +1,5 @@
 const cron = require('cron');
-const DBConnector = require('./DBConnector.js')
+const DBConnector = require('../DBOps/DBConnector.js')
 
 // Runs every hour
 let statUpdater = new cron.CronJob('00 00 * * * *', () => {
