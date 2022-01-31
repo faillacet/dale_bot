@@ -13,8 +13,6 @@ const Betting = require("./DBOps/BettingHandler.js");
 
 // CRON JOBS
 const cron = require('./MiscClasses/CronJobs.js');
-cron.statUpdater.start();
-cron.gameGrabber.start();
 
 // Global Settings
 const MAINCHANNELID = '811340114986401864';
@@ -25,6 +23,12 @@ bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.user.setUsername("dodger dale");
     MAINCHANNEL = bot.channels.cache.get(MAINCHANNELID);
+
+    // Start Cron Jobs
+    cron.setChannel(MAINCHANNEL);
+    cron.statUpdater.start();
+    cron.gameGrabber.start();
+    cron.checkForGames.start();
 });
 
 function handleCommands(msg) {
