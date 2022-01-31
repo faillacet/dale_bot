@@ -25,12 +25,14 @@ async function checkForActiveGames(channel) {
         let hit = [];
         let sumList = await DBConnector.getAllStoredSummoners();
         for (let i = 0; i < sumList.length; i++) {
-            // 5 Second Wait
+            // Check If In game
             await new Promise(resolve => setTimeout(resolve, 5000));
             if ((await DBConnector.isInGame(sumList[i].name)).gameID != 0) {
                 hit.push(sumList[i].name);
             }
         }
+
+        // Display To Channel If Successful Hits
         if (hit.length > 1) {
             let botMessage = "SUMMONERS: \n"
             for (let i = 0; i < hit.length; i++) {

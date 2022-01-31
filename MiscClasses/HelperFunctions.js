@@ -1,5 +1,3 @@
-const Helper = require("./HelperFunctions.js");
-
 class HelperFunctions {
     constructor() {
         this.muteDale = false;
@@ -15,11 +13,11 @@ class HelperFunctions {
         if (msg.author.id === '173944478770397186' || msg.author.id === '201177301264629760') {
             if (this.muteDale) {
                 this.muteDale = false;
-                msg.channel.send(Helper.boxFormat('No longer fuqing dale...'));
+                msg.channel.send(this.boxFormat('No longer fuqing dale...'));
             }
             else {
                 this.muteDale = true;
-                msg.channel.send(Helper.boxFormat('FUQ DALE!!!!'));
+                msg.channel.send(this.boxFormat('FUQ DALE!!!!'));
             }
         }
     }
