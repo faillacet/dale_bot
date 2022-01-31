@@ -4,30 +4,6 @@ const DBConnector = require("./DBConnector.js");
 class BettingHandler {
     constructor() {
         this.currentlyBetting = [];
-        this.activeGames = [];
-    }
-    
-    async checkForActiveGames(channel) {
-        let hit = [];
-        let sumList = await DBConnector.getAllStoredSummoners();
-        for (let i = 0; i < sumList.length; i++) {
-            // 5 Second Wait
-            await new Promise(resolve => setTimeout(resolve, 5000));
-            if ((await DBConnector.isInGame(sumList[i].name)).gameID != 0) {
-                hit.push(sumList[i].name);
-            }
-        }
-        if (hit.length > 1) {
-            let botMessage = "SUMMONERS: \n"
-            for (let i = 0; i < hit.length; i++) {
-                botMessage += hit[i] + "\n";
-            }
-            botMessage += "ARE NOW IN GAME\nPLACE BETS NOW!";
-            channel.send(Helper.boxFormat(botMessage));
-        }
-        else if (hit.length === 1) {
-            channel.send(Helper.boxFormat("SUMMONER: " + hit[0] + " IS NOW IN GAME\nPLACE BETS NOW!"));
-        }
     }
 
     async betOnSummoner(msg, cmd, against) {
