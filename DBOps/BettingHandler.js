@@ -69,7 +69,7 @@ class BettingHandler {
             // Allow 5 Minutes to recieve bets
             const filter = (reaction, user) => (reaction.emoji.name === '✅' || reaction.emoji.name === '❌') && user.id != '811340483720249375';
             let collected = await msg.awaitReactions(filter, {time: 1000 * 60 * 5});
-            collected.each(reaction => {
+            await collected.each(reaction => {
                 if (reaction._emoji.name === '✅') {
                     this.activeBets.push({id: reaction.message.author.id, on: true, sumName: name, betterName: reaction.message.author.username});
                     countOn++;
@@ -101,6 +101,7 @@ class BettingHandler {
             for (let i = 0; i < this.activeGames.length; i++) {
                 if (this.activeGames[i].gameOver === true) {
                     await this.completeBets(this.activeGames[i]);
+                    this.activeGames.splice(i, 1);
                 }
             }
         }
@@ -114,7 +115,8 @@ class BettingHandler {
             let winners = [];
             let loosers = [];
             let win = await DBConnector.gameIsWin(activeGameObj.gameId, activeGameObj.puuid);
-            for (let i = 0; i < this.activeBets.length; i++) {
+            let i = 0;
+            while (i < this.activeBets.length) {
                 if (this.activeBets.sumName === activeGameObj.name) {
                     if (win && this.activeBets[i].on) {
                         winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
@@ -128,9 +130,13 @@ class BettingHandler {
                     else {
                         winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
                     }
+                    this.activeBets.splice(i, 1);
+                }
+                else {
+                    ++i;
                 }
             }
-
+           
             // Got All our winners and looser, now alert
             let userAlert;
             if (win) {
