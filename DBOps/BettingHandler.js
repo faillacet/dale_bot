@@ -85,7 +85,7 @@ class BettingHandler {
             if (countOn > 0) {
                 alert += "THERE ARE " + countOn + " BETS ON THIS SUMMONER\n"
             }
-            else if (countAgainst > 0) {
+            if (countAgainst > 0) {
                 alert += "THERE ARE " + countAgainst + " BETS AGAINST THIS SUMMONER\n"
             }
             this.channel.send(Helper.boxFormat(alert));
@@ -98,11 +98,13 @@ class BettingHandler {
     async getFinishedGames() {
         try {
             // Game finshed, handle all bets
-            for (let i = 0; i < this.activeGames.length; i++) {
+            let i = 0;
+            while (i < this.activeGames.length) {
                 if (this.activeGames[i].gameOver === true) {
                     await this.completeBets(this.activeGames[i]);
                     this.activeGames.splice(i, 1);
                 }
+                ++i;
             }
         }
         catch (e) {
@@ -112,23 +114,27 @@ class BettingHandler {
     
     async completeBets(activeGameObj) {
         try {
-            let winners = [];
-            let loosers = [];
+            let betters = [];
             let win = await DBConnector.gameIsWin(activeGameObj.gameId, activeGameObj.puuid);
             let i = 0;
             while (i < this.activeBets.length) {
-                if (this.activeBets.sumName === activeGameObj.name) {
+                if (this.activeBets[i].sumName === activeGameObj.name) {
+                    // Check If User Is in DB, if NOT Create A Profile
+                    if (!(await DBConnector.userExists(this.activeBets[i].id))) {
+                        await DBConnector.createNewUser(this.activeBets[i].id, this.activeBets[i].betterName);
+                    }
+
                     if (win && this.activeBets[i].on) {
-                        winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                        betters.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName, win: true});
                     }
                     else if (!win && this.activeBets.on) {
-                        loosers.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                        betters.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName, win: false});
                     }
                     else if (win && !this.activeBets.on) {
-                        loosers.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                        betters.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName, win: false});
                     }
                     else {
-                        winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                        betters.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName, win: true});
                     }
                     this.activeBets.splice(i, 1);
                 }
@@ -146,25 +152,24 @@ class BettingHandler {
                 userAlert = activeGameObj.name + " has LOST the game.\n";
             }
         
+            
+            let winners = "";
+            let loosers = "";
+            while (betters.length > 0) {
+                if (betters[0].win === true) {
+                    await DBConnector.addPoints(betters[0].id);
+                    winners += betters.shift().name + "\n";
+                } 
+                else {
+                    await DBConnector.subtractPoints(betters[0].id);
+                    loosers += betters.shift().name + "\n";
+                }
+            }
+
             userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
-            for (let i = 0; i < winners.length; i++) {
-                userAlert += winners[i].name + "\n";
-                // Check If User Is in DB, if NOT Create A Profile
-                if (!(await DBConnector.userExists(winners[i].id))) {
-                    await DBConnector.createNewUser(winners[i].id, winners[i].name);
-                }
-                await DBConnector.addPoints(winners[i].id);
-            }
+            userAlert += winners;
             userAlert += "\nTHE FOLLOWING USERs HAVE LOST THE BET:\n";
-            for (let i = 0; i < loosers.length; i++) {
-                userAlert += loosers[i].name + "\n";
-                // Check If User Is in DB, if NOT Create A Profile
-                if (!(await DBConnector.userExists(loosers[i].id))) {
-                    await DBConnector.createNewUser(loosers[i].id, loosers[i].name);
-                }
-                await DBConnector.subtractPoints(loosers[i].id);
-            }
-        
+            userAlert += loosers;        
             this.channel.send(Helper.boxFormat(userAlert));
         }
         catch(e) {
