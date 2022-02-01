@@ -53,7 +53,7 @@ class BettingHandler {
                     msg.react('✅');
                     msg.react('❌');
                     this.getBets(msg, this.activeGames[i].name);
-                    this.activeGames[i].alerted === true;
+                    this.activeGames[i].alerted = true;
                 }
             }
         }

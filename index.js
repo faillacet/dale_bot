@@ -10,19 +10,16 @@ const Helper = require("./MiscClasses/HelperFunctions.js");
 const Print = require("./MiscClasses/PrintToChannel.js");
 const DBCommand = require("./DBOps/DBCommands.js");
 const Betting = require("./DBOps/BettingHandler.js");
-
-// CRON JOBS
 const cron = require('./MiscClasses/CronJobs.js');
 
 // Global Settings
-const MAINCHANNELID = '600446077769875467';
-let MAINCHANNEL;
+const MAINCHANNELID = '600446077769875467'; // KuttieKittenDodginRoom Main Channel
 
 // Listen for "ready" Event
 bot.on('ready', () => {
     console.info(`Logged in as ${bot.user.tag}!`);
     bot.user.setUsername("dodger dale");
-    MAINCHANNEL = bot.channels.cache.get(MAINCHANNELID);
+    let MAINCHANNEL = bot.channels.cache.get(MAINCHANNELID);
 
     // Start Cron Jobs
     Betting.setChannel(MAINCHANNEL);
@@ -67,9 +64,6 @@ function handleCommands(msg) {
     else if (msg.content === "!fuqDale") {
         Helper.fuqDale(msg);
     }
-    else if (msg.content === "!test") {
-        testingFunc(msg);
-    }
 
     // Misc DB functions
     else if (msg.content === "!updateSummoners") {
@@ -77,14 +71,6 @@ function handleCommands(msg) {
     }
     else if (msg.content.includes("!deleteSummoner")) {
         DBCommand.deleteSummoner(msg, "!deleteSummoner");
-    }
-
-    // Betting Functions
-    else if (msg.content.includes('!betOn')) {
-        Betting.betOnSummoner(msg, '!betOn', false);
-    }
-    else if (msg.content.includes('!betAgainst')) {
-        Betting.betOnSummoner(msg, '!betAgainst', true);
     }
 }
 
@@ -104,26 +90,3 @@ bot.on('message', msg => {
         handleCommands(msg);
     } 
 });
-
-async function testingFunc(msg) {
-    try {
-        let botMessage = "test";
-        let message = await msg.channel.send(Helper.boxFormat(botMessage));
-        message.react('✅');
-        message.react('❌');
-
-        const filter = (reaction, user) => (reaction.emoji.name === '✅' || reaction.emoji.name === '❌') && user.id != '811340483720249375';
-
-        // 5 minutes to place bets
-        let collected = await message.awaitReactions(filter, {time: 1000 * 5});
-        collected.each(reaction => {
-            console.log(reaction.message.author.id);
-        });
-        //console.log(collected.entires());
-       
-    }
-    catch (e) {
-        console.log(e);
-    }
-    
-}
