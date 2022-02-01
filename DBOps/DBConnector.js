@@ -245,7 +245,7 @@ async function createNewUser(discId, discName) {
 
 async function addPoints(discId) {
   try {
-    await queryDB('UPDATE user SET points = points + 100 WHERE userID = ?', discId);
+    await queryDB('UPDATE user SET points = points + 100, betsWon = betsWon + 1, betsTotal = betsTotal + 1 WHERE userID = ?', discId);
   }
   catch (e) {
     console.log(e);
@@ -254,7 +254,7 @@ async function addPoints(discId) {
 
 async function subtractPoints(discId) {
   try {
-    await queryDB('UPDATE user SET points = points - 100 WHERE userID = ?', discId);
+    await queryDB('UPDATE user SET points = points - 100, betsLost = betsLost + 1, betsTotal = betsTotal + 1 WHERE userID = ?', discId);
   }
   catch (e) {
     console.log(e);

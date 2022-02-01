@@ -3,124 +3,178 @@ const DBConnector = require("./DBConnector.js");
 
 class BettingHandler {
     constructor() {
-        this.currentlyBetting = [];
+        this.activeGames = [];
+        this.activeBets = [];
+        this.channel;
     }
 
-    async betOnSummoner(msg, cmd, against) {
-        let name = msg.toString().substr(cmd.length + 1, msg.content.length);
-    
-        // Check If User is already Betting On this summoner
-        for (let i = 0; i < this.currentlyBetting.length; i++) {
-            if (this.currentlyBetting[i].better === msg.author.id && this.currentlyBetting[i].summoner === name) {
-                msg.channel.send('You are already betting on this user...');
-                return;
+    setChannel(chan) {
+        this.channel = chan;
+    }
+
+    async updateActiveGames() {
+        try {
+            let sumArr = await DBConnector.getAllStoredSummoners();
+            for (let i = 0; i < sumArr.length; i++) {
+                let temp = await DBConnector.isInGame(sumArr[i].name);
+                if (temp.gameID != 0) {
+                    let match = false;
+                    for (let j = 0; j < this.activeGames.length; j++) {
+                        if (sumArr[i].name === this.activeGames[j].name) {
+                            match = true;
+                        }
+                    }
+                    if (!match) {
+                        this.activeGames.push({name: sumArr[i].name, alerted: false, gameOver: false, gameId: temp.gameID, puuid: temp.sumId});
+                    }
+                }
+                // Summoner NOT in a game
+                else {
+                    for (let j = 0; j < this.activeGames.length; j++) {
+                        // game finshed, boot from list
+                        if (this.activeGames[j].name === sumArr[i].name) {
+                            this.activeGames[j].gameOver = true;
+                        }
+                    }
+                }
             }
         }
-    
-        // Check If User Is in DB, if NOT Create A Profile
-        if (!(await DBConnector.userExists(msg.author.id))) {
-            await DBConnector.createNewUser(msg.author.id, msg.author.username);
+        catch (e) {
+            console.log(e);
         }
-    
-        // Check If summoner is in a game
-        let inGame = await DBConnector.isInGame(name);
-        if (inGame.gameID === 0) {
-            msg.channel.send(Helper.boxFormat('Summoner is not currently in a game'));
-            return;
-        }
-    
-        // Check to make sure game is in first 10 minutes
-        if ((Date.now() - inGame.gameStartTime) > 600000) {
-            msg.channel.send(Helper.boxFormat('Game started over 10 mins ago\nNo longer accepting bets on this match'));
-            return;
-        }
-    
-        // Add To Currently Betting List and send confirmation
-        this.currentlyBetting.push({better: msg.author.id, summoner: name, isAgainst: against, betterName: msg.author.username});
-        if (against) {
-            msg.channel.send(Helper.boxFormat('100 points bet AGAINST ' + name));
-        }
-        else {
-            msg.channel.send(Helper.boxFormat('100 points bet ON ' + name));
-        }
-    
-        // If this function is already in use, can exit here so only one instance exists
-        for (let i = 0; i < this.currentlyBetting.length; i++) {
-            if (this.currentlyBetting[i].better != msg.author.id && this.currentlyBetting[i].summoner === name) {
-                return;
+    }
+
+    async alertGameStart() {
+        try {
+            // For each new sum in game, alert and open bets
+            for (let i = 0; i < this.activeGames.length; i++) {
+                if (this.activeGames[i].alerted === false) {
+                    let msg = await this.channel.send(Helper.boxFormat("SUMMONER: " + this.activeGames[i].name + " IS NOW IN GAME\nPLACE BETS NOW!"));
+                    msg.react('✅');
+                    msg.react('❌');
+                    this.getBets(msg, this.activeGames[i].name);
+                    this.activeGames[i].alerted === true;
+                }
             }
         }
-    
-        let time = 30000;
-        await new Promise(resolve => setTimeout(resolve, 300000));  // wait 5mins
-        while ((await DBConnector.isInGame(name)).gameID != 0) {
-            // wait 1 minute (check every 30 seconds)
-            await new Promise(resolve => setTimeout(resolve, time));
+        catch (e) {
+            console.log(e);
         }
-        
-        // TEST THIS, may not show up on API Immediatly in some cases
-        await new Promise(resolve => setTimeout(resolve, 15000));
-        let win = await DBConnector.gameIsWin(inGame.gameID, inGame.sumId);
-    
-        // Get all users betting on this (local) summoner
-        let localBetting = [];
-        for (let i = 0; i < this.currentlyBetting.length; i++) {
-            if (this.currentlyBetting[i].summoner === name) {
-                localBetting.push({better: this.currentlyBetting[i].better, isAgainst: this.currentlyBetting[i].isAgainst, betterName: this.currentlyBetting[i].betterName});
+    }
+
+    async getBets(msg, name) {
+        try {
+            let countOn = 0;
+            let countAgainst = 0;
+            // Allow 5 Minutes to recieve bets
+            const filter = (reaction, user) => (reaction.emoji.name === '✅' || reaction.emoji.name === '❌') && user.id != '811340483720249375';
+            let collected = await msg.awaitReactions(filter, {time: 1000 * 60 * 5});
+            collected.each(reaction => {
+                if (reaction._emoji.name === '✅') {
+                    this.activeBets.push({id: reaction.message.author.id, on: true, sumName: name, betterName: reaction.message.author.username});
+                    countOn++;
+                }
+                else {
+                    this.activeBets.push({id: reaction.message.author.id, on: false, sumName: name, betterName: reaction.message.author.username});
+                    countAgainst++;
+                }
+            });
+
+            // After recieving all the bets let users know lock-in is over
+            let alert = "BETS FOR SUMMONER " + name +" NOW CLOSED\n"
+            if (countOn > 0) {
+                alert += "THERE ARE " + countOn + " BETS ON THIS SUMMONER\n"
+            }
+            else if (countAgainst > 0) {
+                alert += "THERE ARE " + countAgainst + " BETS AGAINST THIS SUMMONER\n"
+            }
+            this.channel.send(Helper.boxFormat(alert));
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async getFinishedGames() {
+        try {
+            // Game finshed, handle all bets
+            for (let i = 0; i < this.activeGames.length; i++) {
+                if (this.activeGames[i].gameOver === true) {
+                    await this.completeBets(this.activeGames[i]);
+                }
             }
         }
+        catch (e) {
+            console.log(e);
+        }
+    }
     
-        // Determine who won or lost the bet
-        let winners = [];
-        let loosers = [];
-        for (let i = 0; i < localBetting.length; i++) {
-            if (localBetting[i].isAgainst && win) {
-                loosers.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+    async completeBets(activeGameObj) {
+        try {
+            let winners = [];
+            let loosers = [];
+            let win = await DBConnector.gameIsWin(activeGameObj.gameId, activeGameObj.puuid);
+            for (let i = 0; i < this.activeBets.length; i++) {
+                if (this.activeBets.sumName === activeGameObj.name) {
+                    if (win && this.activeBets[i].on) {
+                        winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                    }
+                    else if (!win && this.activeBets.on) {
+                        loosers.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                    }
+                    else if (win && !this.activeBets.on) {
+                        loosers.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                    }
+                    else {
+                        winners.push({id: this.activeBets[i].id, name: this.activeBets[i].betterName});
+                    }
+                }
             }
-            else if (localBetting[i].isAgainst && !win) {
-                winners.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
-            }
-            else if (!localBetting[i].isAgainst && win) {
-                winners.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+
+            // Got All our winners and looser, now alert
+            let userAlert;
+            if (win) {
+                userAlert = activeGameObj.name + " has WON the game.\n"; 
             }
             else {
-                loosers.push({better: localBetting[i].better, betterName: localBetting[i].betterName});
+                userAlert = activeGameObj.name + " has LOST the game.\n";
             }
-        }
-    
-        // Create msg alerting winners and loosers
-        let userAlert;
-        if (win) {
-            userAlert = name + " has WON the game.\n"; 
-        }
-        else {
-            userAlert = name + " has LOST the game.\n";
-        }
-    
-        userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
-        for (let i = 0; i < winners.length; i++) {
-            userAlert += winners[i].betterName + "\n";
-            await DBConnector.addPoints(winners[i].better);
-        }
-        userAlert += "\nTHE FOLLOWING USERs HAVE LOST THE BET:\n";
-        for (let i = 0; i < loosers.length; i++) {
-            userAlert += loosers[i].betterName + "\n";
-            await DBConnector.subtractPoints(loosers[i].better);
-        }
-    
-        msg.channel.send(Helper.boxFormat(userAlert));
         
-        // Remove from Blocker
-        let index = 0;
-        while (index < this.currentlyBetting.length) {
-            if (this.currentlyBetting[index].summoner === name) {
-                this.currentlyBetting.splice(index, 1);
+            userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
+            for (let i = 0; i < winners.length; i++) {
+                userAlert += winners[i].name + "\n";
+                // Check If User Is in DB, if NOT Create A Profile
+                if (!(await DBConnector.userExists(winners[i].id))) {
+                    await DBConnector.createNewUser(winners[i].id, winners[i].name);
+                }
+                await DBConnector.addPoints(winners[i].id);
             }
-            else {
-                ++index;
+            userAlert += "\nTHE FOLLOWING USERs HAVE LOST THE BET:\n";
+            for (let i = 0; i < loosers.length; i++) {
+                userAlert += loosers[i].name + "\n";
+                // Check If User Is in DB, if NOT Create A Profile
+                if (!(await DBConnector.userExists(loosers[i].id))) {
+                    await DBConnector.createNewUser(loosers[i].id, loosers[i].name);
+                }
+                await DBConnector.subtractPoints(loosers[i].id);
             }
+        
+            this.channel.send(Helper.boxFormat(userAlert));
         }
-        return;
+        catch(e) {
+            console.log(e);
+        }
+    }
+
+    async updateBetting() {
+        try {
+            await this.updateActiveGames();
+            this.alertGameStart();
+            this.getFinishedGames();            
+        }
+        catch (e) {
+            console.log(e);
+        }
     }
 }
 

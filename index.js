@@ -25,10 +25,10 @@ bot.on('ready', () => {
     MAINCHANNEL = bot.channels.cache.get(MAINCHANNELID);
 
     // Start Cron Jobs
-    cron.setChannel(MAINCHANNEL);
+    Betting.setChannel(MAINCHANNEL);
     cron.statUpdater.start();
     cron.gameGrabber.start();
-    cron.checkForGames.start();
+    cron.runBetting.start();
 });
 
 function handleCommands(msg) {
@@ -67,6 +67,9 @@ function handleCommands(msg) {
     else if (msg.content === "!fuqDale") {
         Helper.fuqDale(msg);
     }
+    else if (msg.content === "!test") {
+        testingFunc(msg);
+    }
 
     // Misc DB functions
     else if (msg.content === "!updateSummoners") {
@@ -101,3 +104,26 @@ bot.on('message', msg => {
         handleCommands(msg);
     } 
 });
+
+async function testingFunc(msg) {
+    try {
+        let botMessage = "test";
+        let message = await msg.channel.send(Helper.boxFormat(botMessage));
+        message.react('✅');
+        message.react('❌');
+
+        const filter = (reaction, user) => (reaction.emoji.name === '✅' || reaction.emoji.name === '❌') && user.id != '811340483720249375';
+
+        // 5 minutes to place bets
+        let collected = await message.awaitReactions(filter, {time: 1000 * 5});
+        collected.each(reaction => {
+            console.log(reaction.message.author.id);
+        });
+        //console.log(collected.entires());
+       
+    }
+    catch (e) {
+        console.log(e);
+    }
+    
+}
