@@ -159,10 +159,6 @@ class BettingHandler {
                 }
             }
 
-            let alert = true;
-            if (betters.length === 0) {
-                alert = false;
-            }
            
             // Got All our winners and looser, now alert
             if (win) {
@@ -172,7 +168,11 @@ class BettingHandler {
                 userAlert = activeGameObj.name + " has LOST the game.\n";
             }
         
-            let alert = true;
+            if (betters.length === 0) {
+                this.channel.send(Helper.boxFormat(userAlert));
+                return;
+            }
+
             let winners = "";
             let loosers = "";
             while (betters.length > 0) {
@@ -190,9 +190,7 @@ class BettingHandler {
             userAlert += winners;
             userAlert += "\nTHE FOLLOWING USERS HAVE LOST THE BET:\n";
             userAlert += loosers;       
-            if (alert) {
-                this.channel.send(Helper.boxFormat(userAlert));
-            }
+            this.channel.send(Helper.boxFormat(userAlert));
         }
         catch(e) {
             console.log(e);
