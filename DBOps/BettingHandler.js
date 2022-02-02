@@ -67,25 +67,39 @@ class BettingHandler {
             let countOn = 0;
             let countAgainst = 0;
             // Allow 5 Minutes to recieve bets
-            const filter = (reaction, user) => (reaction.emoji.name === '✅' || reaction.emoji.name === '❌') && user.id != '811340483720249375';
+            const filter = (reaction, user) => reaction.emoji.name === '✅' || reaction.emoji.name === '❌';
             let collected = await msg.awaitReactions(filter, {time: 1000 * 60 * 5});
-            await collected.each(reaction => {
+            collected.each(reaction => {
                 if (reaction._emoji.name === '✅') {
-                    this.activeBets.push({id: reaction.message.author.id, on: true, sumName: name, betterName: reaction.message.author.username});
-                    countOn++;
+                    // Get all Users that reacted w/ this emoji
+                    reaction.users.cache.each(user => {
+                        // If user is not the bot, push to bettingArr
+                        if (user.id != '811340483720249375') {
+                            this.activeBets.push({id: user.id, on: true, sumName: name, betterName: user.username});
+                            countOn++;
+                        }
+                    });
                 }
                 else {
-                    this.activeBets.push({id: reaction.message.author.id, on: false, sumName: name, betterName: reaction.message.author.username});
-                    countAgainst++;
+                    if (user.id != '811340483720249375') {
+                        this.activeBets.push({id:user.id, on: false, sumName: name, betterName: user.username});
+                        countAgainst++;
+                    }
                 }
             });
 
             // After recieving all the bets let users know lock-in is over
             let alert = "BETS FOR SUMMONER " + name +" NOW CLOSED\n"
-            if (countOn > 0) {
+            if (countOn === 1) {
+                alert += "THERE IS " + countOn + " BET ON THIS SUMMONER\n"
+            }
+            else if (countOn > 1) {
                 alert += "THERE ARE " + countOn + " BETS ON THIS SUMMONER\n"
             }
-            if (countAgainst > 0) {
+            if (countAgainst === 1) {
+                alert += "THERE IS " + countAgainst + " BET AGAINST THIS SUMMONER\n"
+            }
+            else if (countAgainst > 1) {
                 alert += "THERE ARE " + countAgainst + " BETS AGAINST THIS SUMMONER\n"
             }
             this.channel.send(Helper.boxFormat(alert));
@@ -168,7 +182,7 @@ class BettingHandler {
 
             userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
             userAlert += winners;
-            userAlert += "\nTHE FOLLOWING USERs HAVE LOST THE BET:\n";
+            userAlert += "\nTHE FOLLOWING USERS HAVE LOST THE BET:\n";
             userAlert += loosers;        
             this.channel.send(Helper.boxFormat(userAlert));
         }
