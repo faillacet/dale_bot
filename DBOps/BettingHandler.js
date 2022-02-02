@@ -158,9 +158,13 @@ class BettingHandler {
                     ++i;
                 }
             }
+
+            let alert = true;
+            if (betters.length === 0) {
+                alert = false;
+            }
            
             // Got All our winners and looser, now alert
-            let userAlert;
             if (win) {
                 userAlert = activeGameObj.name + " has WON the game.\n"; 
             }
@@ -168,7 +172,7 @@ class BettingHandler {
                 userAlert = activeGameObj.name + " has LOST the game.\n";
             }
         
-            
+            let alert = true;
             let winners = "";
             let loosers = "";
             while (betters.length > 0) {
@@ -185,8 +189,10 @@ class BettingHandler {
             userAlert += "THE FOLLOWING USERS HAVE WON THE BET:\n";
             userAlert += winners;
             userAlert += "\nTHE FOLLOWING USERS HAVE LOST THE BET:\n";
-            userAlert += loosers;        
-            this.channel.send(Helper.boxFormat(userAlert));
+            userAlert += loosers;       
+            if (alert) {
+                this.channel.send(Helper.boxFormat(userAlert));
+            }
         }
         catch(e) {
             console.log(e);
