@@ -161,6 +161,7 @@ class BettingHandler {
 
            
             // Got All our winners and looser, now alert
+            let userAlert = "";
             if (win) {
                 userAlert = activeGameObj.name + " has WON the game.\n"; 
             }
