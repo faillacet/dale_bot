@@ -81,7 +81,7 @@ class BettingHandler {
                     });
                 }
                 else {
-                    reaction.user.cache.each(user => {
+                    reaction.users.cache.each(user => {
                         if (user.id != '811340483720249375') {
                             this.activeBets.push({id:user.id, on: false, sumName: name, betterName: user.username});
                             countAgainst++;
