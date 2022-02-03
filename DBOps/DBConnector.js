@@ -211,7 +211,7 @@ async function gameIsWin(matchId, sumPuuid) {
     // wait 15 then try again
     if (e.status.status_code === 404) {
       // Match Not Found so repeat
-      await new Promise(resolve => setTimeout(resolve, 15000));
+      await new Promise(resolve => setTimeout(resolve, 10000));
       return gameIsWin(matchId, sumPuuid);
     }
     // This should never happen
