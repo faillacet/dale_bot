@@ -137,25 +137,31 @@ class BettingHandler {
                 alert = gameObj.sumName + " has LOST the game\n";
             }
 
-            // If not bets send just this msg
-            if (betters.length === 0) {
-                this.channel.send(Helper.boxFormat(alert));
-            }
-
             let winners = "";
             let loosers = "";
             let winExists = false;
             let lossExists = false;
+
             while (betters.length > 0) {
                 if (betters[0].win === true) {
-                    await DBConnector.addPoints(betters[0].id);
+                    if (gameObj.gameQueueId === 420) {
+                        await DBConnector.addPointsRanked(betters[0].id);
+                    }
+                    else {
+                        await DBConnector.addPoints(betters[0].id);
+                    }
                     winners += betters.shift().name + "\n";
                     winExists = true;
                 } 
                 else {
-                    await DBConnector.subtractPoints(betters[0].id);
+                    if (gameObj.gameQueueId === 420) {
+                        await DBConnector.subtractPointsRanked(betters[0].id);
+                    }
+                    else {
+                        await DBConnector.subtractPoints(betters[0].id);
+                    }
                     loosers += betters.shift().name + "\n";
-                    lossExists = false;
+                    lossExists = true;
                 }
             }
 
