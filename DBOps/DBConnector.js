@@ -2,7 +2,7 @@ require("dotenv").config();
 const mysql = require('mysql');
 const util = require('util');
 const MYSQLPASS = process.env.MYSQLPASS;
-const APIKEY = 'RGAPI-c4b3ac40-af02-43a8-9f88-acf506df88c1';
+const APIKEY = process.env.APIKEY;
 const Summoner = require("./Summoner.js");
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
@@ -12,7 +12,7 @@ const Constants = require('./Constants.js');
 const connection = mysql.createConnection({
   host: '34.133.182.114',
   user: 'root',
-  password: '1444password',
+  password: MYSQLPASS,
   database: 'league'
 });
 
