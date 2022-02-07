@@ -176,8 +176,8 @@ class BettingHandler {
 
     async handleRemake(gameObj) {
         try {
-            // wait 45 seconds (to let bets happen)
-            await new Promise(resolve => setTimeout(resolve, 45000));
+            // wait 30 seconds (to let bets happen)
+            await new Promise(resolve => setTimeout(resolve, 30000));
             let i = 0;
             while (i < this.activeBets.length) {
                 // If bet is on this game
