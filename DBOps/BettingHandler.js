@@ -173,4 +173,4 @@ const Betting = new BettingHandler();
 // TESTING
 //Betting.getActiveGames();
 
-module.exports = { Betting };
+module.exports = Betting;
