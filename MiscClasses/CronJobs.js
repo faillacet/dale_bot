@@ -16,7 +16,7 @@ let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
 
 // Runs every 3 minutes
 let runBetting = new cron.CronJob('00 0/2 * * * *', () => {
-    Betting.updateBetting();
+    Betting.getActiveGames();
 });
 
 module.exports = {
