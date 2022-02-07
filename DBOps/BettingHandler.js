@@ -168,7 +168,7 @@ class BettingHandler {
     }
 }
 
-const Betting = new BettingHandlerNEW();
+const Betting = new BettingHandler();
 
 // TESTING
 //Betting.getActiveGames();
