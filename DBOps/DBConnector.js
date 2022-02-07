@@ -2,7 +2,7 @@ require("dotenv").config();
 const mysql = require('mysql');
 const util = require('util');
 const MYSQLPASS = process.env.MYSQLPASS;
-const APIKEY = process.env.APIKEY;
+const APIKEY = 'RGAPI-c4b3ac40-af02-43a8-9f88-acf506df88c1';
 const Summoner = require("./Summoner.js");
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
@@ -12,7 +12,7 @@ const Constants = require('./Constants.js');
 const connection = mysql.createConnection({
   host: '34.133.182.114',
   user: 'root',
-  password: MYSQLPASS,
+  password: '1444password',
   database: 'league'
 });
 
@@ -184,6 +184,39 @@ async function grabAllRankedGames() {
   
 }
 
+// Returns -1 if sum not in game, else returns gameObj
+async function getInGameData(name) {
+  try {
+    let sumObj = await LeagueAPI.getSummonerByName(name);
+    let gameData = await LeagueAPI.getActiveGames(sumObj);
+    let champId;
+    for (let i = 0; i < gameData.participants.length; i++) {
+      if (gameData.participants[i].summonerId === sumObj.id) {
+        champId = gameData.participants[i].championId;
+        break;
+      }
+    }
+    let gameObj = {
+      gameId: gameData.gameId, 
+      gameQueueId: gameData.gameQueueConfigId, 
+      sumId: sumObj.id,
+      sumPuuid: sumObj.puuid,
+      sumName: sumObj.name,
+      sumChamp: champId
+    };
+    return gameObj;
+  }
+  catch (e) {
+    // game not found
+    if (e.status.status_code === 404) {
+      return -1;
+    }
+    else {
+      console.log(e.status.status_code);
+    }
+  }
+}
+
 // Betting Functions
 async function isInGame(name) {
   try {
@@ -252,9 +285,27 @@ async function addPoints(discId) {
   }
 }
 
+async function addPointsRanked(discId) {
+  try {
+    await queryDB('UPDATE user SET points = points + 300, betsWon = betsWon + 1, betsTotal = betsTotal + 1 WHERE userID = ?', discId);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
 async function subtractPoints(discId) {
   try {
     await queryDB('UPDATE user SET points = points - 100, betsLost = betsLost + 1, betsTotal = betsTotal + 1 WHERE userID = ?', discId);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+async function subtractPointsRanked(discId) {
+  try {
+    await queryDB('UPDATE user SET points = points - 300, betsLost = betsLost + 1, betsTotal = betsTotal + 1 WHERE userID = ?', discId);
   }
   catch (e) {
     console.log(e);
@@ -293,7 +344,10 @@ module.exports = {
   subtractPoints,
   getPoints,
   getBettingLeaderboard,
-  getAllStoredSummoners
+  getAllStoredSummoners,
+  getInGameData,
+  addPointsRanked,
+  subtractPointsRanked
 };
 
 
