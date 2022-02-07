@@ -25,14 +25,21 @@ class BettingHandler {
                 if (gameData != -1) {
                     if (!this.activeGames.has(gameData.sumName)) {  
                         this.activeGames.set(gameData.sumName, gameData);
-                        this.getBetsForSummoner(this.activeGames.get(gameData.sumName));   // TODO ENSURE REMAKE DOES NOT BREAK THIS
+                        this.getBetsForSummoner(this.activeGames.get(gameData.sumName));
                     }
                 }
                 // game over, handle bets + remove from activeGames
                 else {
                     if (this.activeGames.has(sum.name)) {
-                        await this.payoutBets(this.activeGames.get(sum.name));
-                        this.activeGames.delete(sum.name);
+                        let aGame = this.activeGames.get(sum.name);
+                        // Check to see if game was remake
+                        if (await DBConnector.gameIsRemake(aGame.gameId)) {
+                            this.handleRemake(aGame);
+                        }
+                        else {
+                            await this.payoutBets(aGame);
+                            this.activeGames.delete(sum.name);
+                        }
                     }
                 }
             }
@@ -161,6 +168,29 @@ class BettingHandler {
                 alert += loosers;
             }
             this.channel.send(Helper.boxFormat(alert));
+        }
+        catch (e) {
+            console.log(e);
+        }
+    }
+
+    async handleRemake(gameObj) {
+        try {
+            // wait 45 seconds (to let bets happen)
+            await new Promise(resolve => setTimeout(resolve, 45000));
+            let i = 0;
+            while (i < this.activeBets.length) {
+                // If bet is on this game
+                if (this.activeBets[i].sumName === gameObj.sumName) {
+                    this.activeBets.splice(i, 1);
+                }
+                else {
+                    i++;
+                }
+            }
+
+            let alert = gameObj.sumName + "'s GAME ENDED IN REMAKE\nALL BETS ARE VOIDED"
+            this.channel.send(Helper.boxFormat(alert));            
         }
         catch (e) {
             console.log(e);

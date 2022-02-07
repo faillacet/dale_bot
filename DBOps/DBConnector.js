@@ -229,6 +229,22 @@ async function isInGame(name) {
   }
 }
 
+async function gameIsRemake(matchId) {
+  try {
+    let id = "NA1_" + matchId;
+    let match = await LeagueAPI.getMatch(id);
+    if (match.info.gameDuration < 301)  { // less than 5 mins
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+  catch (e) {
+    console.log(e);
+  } 
+}
+
 async function gameIsWin(matchId, sumPuuid) {
   try {
     let id = "NA1_" + matchId;
@@ -347,9 +363,9 @@ module.exports = {
   getAllStoredSummoners,
   getInGameData,
   addPointsRanked,
-  subtractPointsRanked
+  subtractPointsRanked,
+  gameIsRemake
 };
-
 
 async function test(name) {
   const matchIdList = await getMatchHistory(name);
@@ -376,17 +392,3 @@ async function getChampKDA(name, champName) {
 
   //}
 }
-
-// TESTING
-async function testing() {
-  try {
-    let x = await getMatchHistory('Jungle Weeb');
-    let y = await getMatchData(x[6]);
-    console.log(y);
-  }
-  catch (e) {
-    console.log(e);
-  }
-}
-
-//testing();
