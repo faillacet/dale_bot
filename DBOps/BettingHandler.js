@@ -19,7 +19,7 @@ class BettingHandler {
         try {
             // Select All Stored Summoners - then check if any are in game
             let summoners = await DBConnector.getAllStoredSummoners();
-            for (sum of summoners) {
+            for (const sum of summoners) {
                 let gameData = await DBConnector.getInGameData(sum.name);
                 // game found, if DNE add to activeGames
                 if (gameData != -1) {
@@ -169,6 +169,8 @@ class BettingHandler {
 }
 
 const Betting = new BettingHandler();
+
+//Betting.getActiveGames();
 
 // TESTING
 //Betting.getActiveGames();

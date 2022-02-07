@@ -376,3 +376,17 @@ async function getChampKDA(name, champName) {
 
   //}
 }
+
+// TESTING
+async function testing() {
+  try {
+    let x = await getMatchHistory('Jungle Weeb');
+    let y = await getMatchData(x[6]);
+    console.log(y);
+  }
+  catch (e) {
+    console.log(e);
+  }
+}
+
+//testing();
