@@ -31,7 +31,7 @@ class HelperFunctions {
 
     addReactUser(msg, cmd) {
         let id = msg.toString().substr(cmd.length + 1, msg.content.length);
-        if (this.inList(msg.author.id, this.adminList)) {
+        if (this.inList(msg.author.tag, this.adminList)) {
             let index = this.inListIndex(id, this.reactUser);
             // not in list
             if (index === -1) {
@@ -49,7 +49,7 @@ class HelperFunctions {
 
     muteUser(msg, cmd) {
         let id = msg.toString().substr(cmd.length + 1, msg.content.length);
-        if (this.inList(msg.author.id, this.adminList)) {
+        if (this.inList(msg.author.tag, this.adminList)) {
             let index = this.inListIndex(id, this.userMuted);
             // not in list
             if (index === -1) {
