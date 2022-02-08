@@ -107,10 +107,10 @@ function handleCommands(msg) {
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
 
-    if (Helper.inList(msg.author.id, Helper.reactUser)) {
+    if (Helper.inList(msg.author.tag, Helper.reactUser)) {
         msg.react("🥲");
     }
-    if (Helper.inList(msg.author.id, Helper.userMuted)) {
+    if (Helper.inList(msg.author.tag, Helper.userMuted)) {
         msg.delete();
     }
 
