@@ -206,9 +206,4 @@ class BettingHandler {
 
 const Betting = new BettingHandler();
 
-//Betting.getActiveGames();
-
-// TESTING
-//Betting.getActiveGames();
-
 module.exports = Betting;

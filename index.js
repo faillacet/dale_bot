@@ -86,11 +86,11 @@ function handleCommands(msg) {
     }
 
     // Admin/Redeemable Functions --- TODO ORGANIZE THIS
-    else if (msg.content === "!fuqDale") {
-        Helper.fuqDale(msg);
+    else if (msg.content.includes("!reactUser")) {
+        Helper.addReactUser(msg, "!reactUser");
     }
-    else if (msg.content === "!test") {
-        testFunc(msg);
+    else if (msg.content.includes("!muteUser")) {
+        Helper.muteUser(msg, "!muteUser");
     }
 
     // Misc DB functions
@@ -107,11 +107,18 @@ function handleCommands(msg) {
 // msg.channel.send: sends a message to the channnel without tagging anyone
 bot.on('message', msg => {
 
-    if (msg.author.id === '218225932886867968' && Helper.muteDale) {
-        msg.delete()
-        .then(() => console.log('Deleted msg from DALE LOL'))
-        .catch(console.error);
+    if (Helper.inList(msg.author.id, Helper.reactUser)) {
+        msg.react("🥲");
     }
+    if (Helper.inList(msg.author.id, Helper.userMuted)) {
+        msg.delete();
+    }
+
+    // if (msg.author.id === '218225932886867968' && Helper.muteDale) {
+    //     msg.delete()
+    //     .then(() => console.log('Deleted msg from DALE LOL'))
+    //     .catch(console.error);
+    // }
 
     // Check Each Msg to see if it is a possible command (so command search isnt done on every message)
     if (msg.content[0] === '!') {

@@ -213,6 +213,7 @@ async function getInGameData(name) {
     }
     else {
       console.log(e.status.status_code);
+      return -1;
     }
   }
 }
