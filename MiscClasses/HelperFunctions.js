@@ -50,7 +50,7 @@ class HelperFunctions {
     muteUser(msg, cmd) {
         let id = msg.toString().substr(cmd.length + 1, msg.content.length);
         if (this.inList(msg.author.id, this.adminList)) {
-            let index = this.inListIndex(id, this.reactUser);
+            let index = this.inListIndex(id, this.userMuted);
             // not in list
             if (index === -1) {
                 this.userMuted.push(id);
