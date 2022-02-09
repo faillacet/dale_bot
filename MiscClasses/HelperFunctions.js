@@ -12,7 +12,7 @@ class HelperFunctions {
 
     inList(item, list) {
         for (const element of list) {
-            if (element === item) {
+            if (element == item) {
                 return true;
             }
         }
