@@ -28,30 +28,6 @@ bot.on('ready', () => {
     cron.runBetting.start();
 });
 
-// async function testFunc(msg) {
-//     try {
-//         let countOn = 0;
-//         let countAgainst = 0;
-//         msg.react('✅');
-//         msg.react('❌');
-//         // Allow 5 Minutes to recieve bets
-//         const filter = (reaction, user) => reaction.emoji.name === '✅' || reaction.emoji.name === '❌';
-//         let collected = await msg.awaitReactions(filter, {time: 1000 * 5});
-//         collected.each(reaction => {
-//             console.log(reaction._emoji.name);
-//             reaction.users.cache.each(user => {
-//                 if (user.id != '811340483720249375') {
-//                     console.log(user.id);
-//                 }
-//                 //console.log(user);
-//             });
-//             //console.log(reaction.users.cache);
-//         });
-//     }
-//     catch (e) {
-//         console.log(e);
-//     }
-// }
 
 function handleCommands(msg) {
     // Print Stuff Functions

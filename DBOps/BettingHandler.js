@@ -32,20 +32,15 @@ class BettingHandler {
                 else {
                     if (this.activeGames.has(sum.name)) {
                         let aGame = this.activeGames.get(sum.name);
-                        // Check to see if game was remake
-                        if (await DBConnector.gameIsRemake(aGame.gameId)) {
-                            this.handleRemake(aGame);
-                        }
-                        else {
-                            await this.payoutBets(aGame);
-                            this.activeGames.delete(sum.name);
-                        }
+                        await this.payoutBets(aGame);
+                        this.activeGames.delete(sum.name);
                     }
                 }
             }
         }
         catch (e) {
             console.log(e);
+            console.log('getActiveGames()')
         }
     }
 
