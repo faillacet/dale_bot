@@ -30,8 +30,8 @@ class HelperFunctions {
     }
 
     emoteSpam(msg) {
-        for (let i = 0; i < 10; i++) {
-            msg.channel.send(":raeW:");
+        for (let i = 0; i < 5; i++) {
+            msg.channel.send("<:raeW:849475323061731378>");
         }
     }
 
