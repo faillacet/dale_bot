@@ -68,7 +68,9 @@ function handleCommands(msg) {
     else if (msg.content.includes("!muteUser")) {
         Helper.muteUser(msg, "!muteUser");
     }
-
+    else if (msg.content === "!raeW") {
+        Helper.emoteSpam(msg);
+    }
     // Misc DB functions
     else if (msg.content === "!updateSummoners") {
         DBCommand.updateSummoners(msg);

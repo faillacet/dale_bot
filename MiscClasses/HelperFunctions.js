@@ -29,6 +29,14 @@ class HelperFunctions {
         return -1;
     }
 
+    emoteSpam(msg) {
+        for (let i = 0; i < 10; i++) {
+            reactMsg = msg.channel.send(":raeW:");
+            reactMsg.react(":raeW:");
+        }
+        
+    }
+
     addReactUser(msg, cmd) {
         let tag = msg.toString().substr(cmd.length + 1, msg.content.length);
         if (this.inList(msg.author.id, this.adminList)) {
