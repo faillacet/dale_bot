@@ -31,7 +31,7 @@ class HelperFunctions {
 
     emoteSpam(msg) {
         for (let i = 0; i < 10; i++) {
-            reactMsg = msg.channel.send(":raeW:");
+            const reactMsg = msg.channel.send(":raeW:");
             reactMsg.react(":raeW:");
         }
         
