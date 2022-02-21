@@ -15,7 +15,7 @@ let gameGrabber = new cron.CronJob('00 00 03 * * *', () => {
 });
 
 // Runs every minute
-let runBetting = new cron.CronJob('00 0/1 * * * *', () => {
+let runBetting = new cron.CronJob('00 0/2 * * * *', () => {
     Betting.getActiveGames();
 });
 
