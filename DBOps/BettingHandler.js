@@ -49,13 +49,14 @@ class BettingHandler {
             // Bot Send Alert Msg
             let msg;
             if (gameObj.gameQueueId === 420) {
-                msg = await this.channel.send(Helper.boxFormat("SUMMONER: " + gameObj.sumName + " IS NOW IN A RANKED GAME\nRANKED BETS ARE WORTH 3X\nPLACE BETS NOW!"));
+                msg = await this.channel.send(Helper.boxFormat(gameObj.sumName + " IS NOW IN A RANKED GAME\nPLAYING CHAMPION: " + Helper.getChampionName(gameObj.sumChamp) + "\nRANKED BETS ARE WORTH 3X\nPLACE BETS NOW!"));
             }
             else {
-                msg = await this.channel.send(Helper.boxFormat("SUMMONER: " + gameObj.sumName + " IS NOW IN A NON-RANKED GAME\nPLACE BETS NOW!"));
+                msg = await this.channel.send(Helper.boxFormat(gameObj.sumName + " IS NOW IN A NON-RANKED GAME\nPLAYING CHAMPION: " + Helper.getChampionName(gameObj.sumChamp) + "\nPLACE BETS NOW!"));
             }
             msg.react('✅');
             msg.react('❌');
+            msg.react('🦑');
 
             // Now Collect Bets
             let count = 0;

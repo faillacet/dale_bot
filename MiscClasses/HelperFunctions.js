@@ -1,3 +1,5 @@
+const Constants = require("./Constants.js");
+
 class HelperFunctions {
     constructor() {
         this.userMuted = [];
@@ -72,6 +74,15 @@ class HelperFunctions {
         }
         else {
             msg.channel.send(Helper.boxFormat("You do not have perms for this command."));
+        }
+    }
+
+    getChampionName(champID) {
+        if (Constants.CHAMPIONNAMES[champID] != null) {
+            return Constants.CHAMPIONNAMES[champID];
+        }
+        else {
+            return "UNDEFINED";
         }
     }
 }

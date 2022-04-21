@@ -6,7 +6,7 @@ const APIKEY = process.env.APIKEY;
 const Summoner = require("./Summoner.js");
 let LeagueAPI = require("leagueapiwrapper");
 LeagueAPI = new LeagueAPI(APIKEY, Region.NA);
-const Constants = require('./Constants.js');
+const Constants = require('../MiscClasses/Constants.js');
 
 // Connect to DB
 const connection = mysql.createConnection({

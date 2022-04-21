@@ -1,23 +1,17 @@
-# dale_bot
-Henlo friends
-except dale... #dalebot
+## dale_bot
+Henlo friends #dalebot
 
-# Dale Responses
-## Name Responses:
-'dale'
-'Dale'
-'DALE'
+# Intentions
+Bot develped by Trenton Faillace and Angel Vasquez
+Personal project intended for personal discord use
+Possible future scaling to be available to all discord servers
 
-## Dale Game Requests:
-'dale do you want to game?'
-'dale games?'
-'game'
-
-## Despacito Response (not fully functional)
-'alexa play despacito'
+### Features
 
 ## !daleMsg Command
 'cool dale msgs'
 
 ## !trantMsg Command
 'cool trant msgs'
+
+## TODO: WRITE UP OF ALL OTHER FEATURES
