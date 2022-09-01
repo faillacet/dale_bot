@@ -56,7 +56,6 @@ class BettingHandler {
             }
             msg.react('✅');
             msg.react('❌');
-            msg.react('🦑');
 
             // Now Collect Bets
             let count = 0;

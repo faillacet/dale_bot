@@ -10,8 +10,8 @@ const Constants = require('../MiscClasses/Constants.js');
 
 // Connect to DB
 const connection = mysql.createConnection({
-  host: '34.133.182.114',
-  user: 'root',
+  host: 'dalebot.c3xtb6iruzvw.us-west-1.rds.amazonaws.com',
+  user: 'trant2000',
   password: MYSQLPASS,
   database: 'league'
 });
@@ -144,12 +144,12 @@ async function pushRankedGames(name) {
   for (let i = 0; i < matchIdList.length; i++) {
     const temp = await getMatchData(matchIdList[i]);
     // If Ranked Game AND game not already in dB push it to DB (only player not others)
-    if (temp.info.queueId === Constants.QUEUETYPE.rankedSolo && (await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE gameID = ?', temp.info.gameId))[0]['COUNT(*)'] === 0) {
+    if (temp.info.queueId === Constants.QUEUETYPE.rankedSolo && (await queryDB('SELECT COUNT(*) FROM rankedgame WHERE gameID = ?', temp.info.gameId))[0]['COUNT(*)'] === 0) {
       for (let j = 0; j < temp.info.participants.length; j++) {
         if (puuid === temp.info.participants[j].puuid) {
-          if ((await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE gameId = ?', temp.info.gameId)) != 1) {
+          if ((await queryDB('SELECT COUNT(*) FROM rankedgame WHERE gameId = ?', temp.info.gameId)) != 1) {
             const p = temp.info.participants[j];
-            await queryDB('INSERT INTO rankedmatch VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
+            await queryDB('INSERT INTO rankedgame VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)', 
             [temp.info.gameId, temp.info.gameStartTimestamp, temp.info.gameDuration, p.assists, p.baronKills, p.bountyLevel, p.champLevel, p.championId, p.championName, p.damageDealtToBuildings, p.damageDealtToObjectives, p.damageDealtToTurrets, 
             p.damageSelfMitigated, p.deaths, p.detectorWardsPlaced, p.doubleKills, p.dragonKills, p.firstBloodAssist, p.firstBloodKill, p.firstTowerAssist, p.firstTowerKill, p.gameEndedInEarlySurrender, 
             p.gameEndedInSurrender, p.goldEarned, p.goldSpent, p.individualPosition, p.inhibitorKills, p.inhibitorTakedowns, p.inhibitorsLost, p.killingSprees, p.kills, p.lane, p.largestKillingSpree, 
@@ -377,10 +377,10 @@ async function test(name) {
 
 // GET STATS BY 
 async function getChampKDA(name, champName) {
-  const totalRecors = (await queryDB('SELECT COUNT(*) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['COUNT(*)'];
-  const avgKills = (await queryDB('SELECT AVG(kills) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(kills)'];
-  const avgAssists = (await queryDB('SELECT AVG(assists) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(assists)'];
-  const avgDeaths = (await queryDB('SELECT AVG(deaths) FROM rankedmatch WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(deaths)'];
+  const totalRecors = (await queryDB('SELECT COUNT(*) FROM rankedgame WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['COUNT(*)'];
+  const avgKills = (await queryDB('SELECT AVG(kills) FROM rankedgame WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(kills)'];
+  const avgAssists = (await queryDB('SELECT AVG(assists) FROM rankedgame WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(assists)'];
+  const avgDeaths = (await queryDB('SELECT AVG(deaths) FROM rankedgame WHERE puuid = (SELECT puuid FROM summoner WHERE name = ?) AND championName = ?', [name, champName]))[0]['AVG(deaths)'];
   if (avgDeaths === 0) {
     console.log('RIP');
   }

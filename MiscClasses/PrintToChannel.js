@@ -33,7 +33,7 @@ class PrintToChannel {
         let name = msg.toString().substr(cmd.length + 1, msg.content.length);
         try {
             let stats = await DBConnector.getStats(name);
-            msg.channel.send('```\n' + stats.name + ': ' + stats.tier + ' ' + stats.sumRank + "\nLP: " + 
+            msg.channel.send('```\n' + stats.name + '\nRank: ' + stats.tier + ' ' + stats.sumRank + "\nLP: " + 
             stats.leaguePoints + "\nWins: " + stats.wins + "\nLosses: " + stats.losses + "\nWinrate: " + 
             stats.winrate + "%\n```");
         }
