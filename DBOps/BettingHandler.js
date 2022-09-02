@@ -10,7 +10,7 @@ class BettingHandler {
         this.bettingWindow = 60000 * 3; // 3 minute window
         this.botId = '811340483720249375';
     }
-
+const chan = '1015365249471365120';
     setChannel(chan) {
         this.channel = chan;
     }
