@@ -14,7 +14,7 @@ const cron = require('./MiscClasses/CronJobs.js');
 
 // Global Settings
 //const MAINCHANNELID = '600446077769875467'; // KuttieKittenDodginRoom Main Channel
-const MAINCHANNELID = '600446077769875467'; // KuttieKittenDodginRoom League Channel
+const MAINCHANNELID = '1015365249471365120'; // KuttieKittenDodginRoom League Channel
 
 // Listen for "ready" Event
 bot.on('ready', () => {
