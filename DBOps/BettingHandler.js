@@ -1,6 +1,6 @@
 const Helper = require("../MiscClasses/HelperFunctions.js");
 const DBConnector = require("./DBConnector.js");
-
+const chan = '1015365249471365120';
 class BettingHandler {
     constructor() {
         this.activeGames = new Map();   // Key is sumName
@@ -10,7 +10,6 @@ class BettingHandler {
         this.bettingWindow = 60000 * 3; // 3 minute window
         this.botId = '811340483720249375';
     }
-const chan = '1015365249471365120';
     setChannel(chan) {
         this.channel = chan;
     }
